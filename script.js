@@ -1,300 +1,593 @@
-/* =========================================================
-   WHATDASH — script.js
-   Handles: navbar scroll, mobile menu, hero profit counter,
-   terminal animation, scroll reveals, FAQ accordion,
-   platform bar animations.
-   ========================================================= */
+/**
+ * WhatDash — main.js
+ * Architecture: IIFE modules, no global pollution, event delegation
+ * where appropriate. No framework needed for this scope.
+ */
 
 'use strict';
 
-/* =========================================================
-   1. NAVBAR — scroll effect + mobile toggle
-   ========================================================= */
-(function initNavbar() {
-  const navbar     = document.getElementById('navbar');
-  const hamburger  = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
+/* ================================================================
+   UTILITIES
+   ================================================================ */
 
-  /* Scroll state */
-  function onScroll() {
-    navbar.classList.toggle('scrolled', window.scrollY > 24);
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll(); // run once on load
+function $(sel, ctx = document) { return ctx.querySelector(sel); }
+function $$(sel, ctx = document) { return [...ctx.querySelectorAll(sel)]; }
 
-  /* Mobile toggle */
-  hamburger.addEventListener('click', () => {
-    const open = mobileMenu.classList.toggle('open');
-    hamburger.classList.toggle('open', open);
-    hamburger.setAttribute('aria-expanded', open);
-  });
-
-  /* Close mobile menu when a link is clicked */
-  mobileMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      hamburger.classList.remove('open');
-      hamburger.setAttribute('aria-expanded', false);
-    });
-  });
-})();
-
-
-/* =========================================================
-   2. HERO PROFIT COUNTER — animated count-up
-   ========================================================= */
-(function initProfitCounter() {
-  const el       = document.getElementById('heroProfit');
-  const target   = 4287.50;
-  const duration = 2200; // ms
-  const fps      = 60;
-  const steps    = (duration / 1000) * fps;
-  const increment= target / steps;
-  let   current  = 0;
-  let   raf;
+/** Animate a numeric value from 0 to target */
+function animateCount(el, target, duration = 2000, formatter = (v) => v) {
+  const fps = 60;
+  const steps = (duration / 1000) * fps;
+  const inc = target / steps;
+  let current = 0;
 
   function tick() {
-    current = Math.min(current + increment, target);
-    el.textContent = '$' + current.toFixed(2);
-    if (current < target) {
-      raf = requestAnimationFrame(tick);
-    }
+    current = Math.min(current + inc, target);
+    el.textContent = formatter(current);
+    if (current < target) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function formatUSD(value) {
+  return '$' + value.toFixed(2);
+}
+
+/* ================================================================
+   THEME
+   ================================================================ */
+const Theme = (() => {
+  const html = document.documentElement;
+  let isDark = true;
+
+  function apply(dark) {
+    isDark = dark;
+    html.setAttribute('data-theme', dark ? 'dark' : 'light');
+
+    // Sync all toggle icon pairs
+    $$('[data-theme-sun]').forEach(el => {
+      el.style.display = dark ? 'block' : 'none';
+    });
+    $$('[data-theme-moon]').forEach(el => {
+      el.style.display = dark ? 'none' : 'block';
+    });
+
+    try { localStorage.setItem('wd_theme', dark ? 'dark' : 'light'); } catch (_) {}
   }
 
-  /* Start when hero is visible (immediately for above-fold) */
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        observer.disconnect();
-        // short delay so the page paints first
-        setTimeout(() => requestAnimationFrame(tick), 400);
-      }
-    },
-    { threshold: 0.2 }
-  );
-  const heroSection = document.getElementById('hero');
-  if (heroSection) observer.observe(heroSection);
-})();
+  function toggle() { apply(!isDark); }
 
+  function init() {
+    let saved = 'dark';
+    try { saved = localStorage.getItem('wd_theme') || 'dark'; } catch (_) {}
+    apply(saved === 'dark');
 
-/* =========================================================
-   3. TERMINAL ANIMATION — scroll-triggered typewriter
-   ========================================================= */
-(function initTerminal() {
-  const LINES = [
-    { delay: 0,    cls: 'terminal__line--system',  text: 'WhatDash Live Tracker — Session started' },
-    { delay: 500,  cls: 'terminal__line--muted',   text: 'Platform: Whatnot  ·  12:04:33 PM' },
-    { delay: 1000, cls: 'terminal__line--blank',   text: ' ' },
-    { delay: 1400, cls: 'terminal__line--action',  text: '► Sale registered: Vintage Coach Bag × 1' },
-    { delay: 1800, cls: 'terminal__line--profit',  text: '  Revenue  +$145.00  Cost  -$62.00  Profit  +$83.00' },
-    { delay: 2600, cls: 'terminal__line--action',  text: '► Sale registered: Y2K Levi Jeans × 2' },
-    { delay: 3000, cls: 'terminal__line--profit',  text: '  Revenue  +$90.00   Cost  -$34.00  Profit  +$56.00' },
-    { delay: 3800, cls: 'terminal__line--action',  text: '► Sale registered: Nike SB Dunk Low × 1' },
-    { delay: 4200, cls: 'terminal__line--profit',  text: '  Revenue  +$280.00  Cost  -$110.00  Profit  +$170.00' },
-    { delay: 5000, cls: 'terminal__line--blank',   text: ' ' },
-    { delay: 5200, cls: 'terminal__line--system',  text: '─────────────────────────────────────' },
-    { delay: 5400, cls: 'terminal__line--summary', text: '  Sales: 4  ·  Revenue: $515.00  ·  Profit: $309.00' },
-    { delay: 5800, cls: 'terminal__line--margin',  text: '  Margin: 59.9%  ·  Running 00:47:12' },
-    { delay: 6200, cls: 'terminal__line--system',  text: '─────────────────────────────────────' },
-    { delay: 7000, cls: 'terminal__line--cursor',  text: '' },
-  ];
-
-  const body       = document.getElementById('terminalBody');
-  const replayBtn  = document.getElementById('replayBtn');
-  let   timers     = [];
-  let   hasRun     = false;
-
-  function buildLines() {
-    body.innerHTML = '';
-    LINES.forEach(line => {
-      const div = document.createElement('div');
-      div.className = 'terminal__line ' + line.cls;
-      if (line.cls === 'terminal__line--cursor') {
-        const cursor = document.createElement('span');
-        cursor.className = 'terminal__cursor';
-        div.appendChild(cursor);
-      } else {
-        div.textContent = line.text;
-      }
-      body.appendChild(div);
+    // Bind all theme toggle buttons
+    $$('[data-action="toggle-theme"]').forEach(btn => {
+      btn.addEventListener('click', toggle);
     });
   }
 
-  function clearTimers() {
-    timers.forEach(clearTimeout);
-    timers = [];
+  return { init, toggle, apply, get isDark() { return isDark; } };
+})();
+
+/* ================================================================
+   NAVBAR
+   ================================================================ */
+const Navbar = (() => {
+  function init() {
+    const nav = $('#navbar');
+    if (!nav) return;
+
+    // Scroll state
+    const onScroll = () => {
+      nav.classList.toggle('navbar--scrolled', window.scrollY > 20);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Hamburger
+    const ham = $('#hamburger');
+    const mob = $('#mobileMenu');
+    if (!ham || !mob) return;
+
+    ham.addEventListener('click', () => {
+      const isOpen = ham.getAttribute('aria-expanded') === 'true';
+      const next = !isOpen;
+      ham.setAttribute('aria-expanded', next);
+      mob.setAttribute('aria-hidden', !next);
+    });
+
+    // Close on link click
+    $$('a', mob).forEach(a => {
+      a.addEventListener('click', () => {
+        ham.setAttribute('aria-expanded', 'false');
+        mob.setAttribute('aria-hidden', 'true');
+      });
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!nav.contains(e.target) && !mob.contains(e.target)) {
+        ham.setAttribute('aria-expanded', 'false');
+        mob.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+
+  return { init };
+})();
+
+/* ================================================================
+   SMOOTH SCROLL
+   ================================================================ */
+function initSmoothScroll() {
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const target = document.getElementById(a.getAttribute('href').slice(1));
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+/* ================================================================
+   SCROLL REVEAL
+   ================================================================ */
+const Reveal = (() => {
+  let observer;
+
+  function init() {
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+
+    $$('.reveal').forEach(el => observer.observe(el));
+  }
+
+  /** Observe new elements added dynamically (e.g. dashboard) */
+  function observe(root) {
+    $$('.reveal', root).forEach(el => {
+      el.classList.add('visible'); // instant on navigation
+    });
+  }
+
+  return { init, observe };
+})();
+
+/* ================================================================
+   PLATFORM BARS (landing preview)
+   ================================================================ */
+function initPlatformBars() {
+  const fills = $$('.pbar__fill[data-width]');
+  if (!fills.length) return;
+
+  fills.forEach(f => { f.style.width = '0'; });
+
+  const section = $('#dashboard-preview');
+  if (!section) return;
+
+  const obs = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      fills.forEach((f, i) => {
+        setTimeout(() => { f.style.width = f.dataset.width; }, i * 140);
+      });
+      obs.disconnect();
+    }
+  }, { threshold: 0.25 });
+
+  obs.observe(section);
+}
+
+/* ================================================================
+   PHONE PROFIT COUNTER
+   ================================================================ */
+function initPhoneProfitCounter() {
+  const el = $('#phoneProfit');
+  if (!el) return;
+
+  const hero = $('#hero');
+  if (!hero) return;
+
+  const obs = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      obs.disconnect();
+      setTimeout(() => animateCount(el, 4287.50, 2400, formatUSD), 500);
+    }
+  }, { threshold: 0.2 });
+
+  obs.observe(hero);
+}
+
+/* ================================================================
+   LIVE PROFIT COUNTER (dashboard)
+   ================================================================ */
+function initLiveProfitCounter() {
+  const el = $('#liveProfit');
+  if (!el) return;
+  setTimeout(() => animateCount(el, 309.00, 1800, formatUSD), 300);
+}
+
+/* ================================================================
+   TERMINAL ANIMATION
+   ================================================================ */
+const Terminal = (() => {
+  const SCRIPT = [
+    { delay: 0,    cls: 't-line--sys',    text: 'WhatDash Live Tracker — Session started' },
+    { delay: 350,  cls: 't-line--sys',    text: 'Platform: Whatnot  ·  12:04:33 PM' },
+    { delay: 700,  cls: '',              text: '' },
+    { delay: 1050, cls: 't-line--action', text: '► Sale registered: Vintage Coach Bag × 1' },
+    { delay: 1400, cls: 't-line--profit', text: '  Revenue  +$145.00  Cost  -$62.00  Profit  +$83.00' },
+    { delay: 2000, cls: 't-line--action', text: '► Sale registered: Y2K Levi Jeans × 2' },
+    { delay: 2350, cls: 't-line--profit', text: '  Revenue  +$90.00   Cost  -$34.00  Profit  +$56.00' },
+    { delay: 3000, cls: 't-line--action', text: '► Sale registered: Nike SB Dunk Low × 1' },
+    { delay: 3350, cls: 't-line--profit', text: '  Revenue  +$280.00  Cost  -$110.00  Profit  +$170.00' },
+    { delay: 4000, cls: '',              text: '' },
+    { delay: 4200, cls: 't-line--sep',    text: '─────────────────────────────────────────' },
+    { delay: 4350, cls: 't-line--summary', text: '  Sales: 3  ·  Revenue: $515.00  ·  Profit: $309.00' },
+    { delay: 4500, cls: 't-line--margin',  text: '  Margin: 59.9%  ·  Running 00:47:12' },
+    { delay: 4650, cls: 't-line--sep',    text: '─────────────────────────────────────────' },
+    { delay: 5000, cls: 't-line--cursor', text: '' },
+  ];
+
+  let timers = [];
+  let hasRun = false;
+
+  function build() {
+    const body = $('#terminalBody');
+    if (!body) return;
+
+    body.innerHTML = '';
+    SCRIPT.forEach(line => {
+      const el = document.createElement('div');
+      el.className = ['t-line', 'mono', line.cls].filter(Boolean).join(' ');
+      el.setAttribute('aria-hidden', 'true');
+      if (line.cls !== 't-line--cursor') el.textContent = line.text;
+      body.appendChild(el);
+    });
   }
 
   function run() {
-    clearTimers();
-    buildLines();
-    const lineEls = body.querySelectorAll('.terminal__line');
-    LINES.forEach((line, i) => {
+    timers.forEach(clearTimeout);
+    timers = [];
+    build();
+
+    const lines = $$('#terminalBody .t-line');
+    SCRIPT.forEach((line, i) => {
       const t = setTimeout(() => {
-        lineEls[i].classList.add('visible');
+        lines[i]?.classList.add('visible');
       }, line.delay);
       timers.push(t);
     });
   }
 
-  /* Scroll trigger */
-  const section = document.getElementById('demo');
-  const observer = new IntersectionObserver(
-    ([entry]) => {
+  function init() {
+    const section = $('#demo');
+    if (!section) return;
+
+    build();
+
+    const obs = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !hasRun) {
         hasRun = true;
         run();
       }
-    },
-    { threshold: 0.25 }
-  );
-  if (section) observer.observe(section);
+    }, { threshold: 0.2 });
+    obs.observe(section);
 
-  /* Replay button */
-  replayBtn.addEventListener('click', () => {
-    hasRun = false; // allow re-trigger
-    run();
-  });
-
-  buildLines(); // pre-render hidden lines
-})();
-
-
-/* =========================================================
-   4. SCROLL REVEAL — IntersectionObserver for .reveal
-   ========================================================= */
-(function initReveal() {
-  const elements = document.querySelectorAll('.reveal');
-  if (!elements.length) return;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target); // fire once
-        }
-      });
-    },
-    {
-      threshold: 0.12,
-      rootMargin: '0px 0px -40px 0px'
-    }
-  );
-
-  elements.forEach(el => observer.observe(el));
-})();
-
-
-/* =========================================================
-   5. FAQ ACCORDION
-   ========================================================= */
-(function initFAQ() {
-  const triggers = document.querySelectorAll('.faq-item__trigger');
-
-  triggers.forEach(trigger => {
-    trigger.addEventListener('click', () => {
-      const item     = trigger.closest('.faq-item');
-      const body     = item.querySelector('.faq-item__body');
-      const expanded = trigger.getAttribute('aria-expanded') === 'true';
-
-      /* Close all others */
-      triggers.forEach(t => {
-        if (t !== trigger) {
-          t.setAttribute('aria-expanded', 'false');
-          t.closest('.faq-item').querySelector('.faq-item__body').classList.remove('open');
-        }
-      });
-
-      /* Toggle this one */
-      const next = !expanded;
-      trigger.setAttribute('aria-expanded', next);
-      body.classList.toggle('open', next);
+    $('#replayBtn')?.addEventListener('click', () => {
+      hasRun = false;
+      run();
     });
-  });
-})();
-
-
-/* =========================================================
-   6. PLATFORM BAR ANIMATION
-   — animate width on scroll into view
-   ========================================================= */
-(function initPlatformBars() {
-  const fills = document.querySelectorAll('.platform-bar__fill');
-  if (!fills.length) return;
-
-  /* Store original widths, reset to 0 */
-  const targets = [];
-  fills.forEach(fill => {
-    targets.push(fill.style.width);
-    fill.style.width = '0';
-    fill.style.transition = 'none';
-  });
-
-  const dashboard = document.querySelector('.mock-dashboard');
-  if (!dashboard) return;
-
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        fills.forEach((fill, i) => {
-          setTimeout(() => {
-            fill.style.transition = 'width 1s cubic-bezier(.4,0,.2,1)';
-            fill.style.width = targets[i];
-          }, i * 120);
-        });
-        observer.disconnect();
-      }
-    },
-    { threshold: 0.3 }
-  );
-  observer.observe(dashboard);
-})();
-
-
-/* =========================================================
-   7. SMOOTH SCROLL — anchor links
-   ========================================================= */
-(function initSmoothScroll() {
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', (e) => {
-      const target = document.querySelector(anchor.getAttribute('href'));
-      if (!target) return;
-      e.preventDefault();
-      const offset = 72; // navbar height
-      const top = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior: 'smooth' });
-    });
-  });
-})();
-
-
-/* =========================================================
-   8. HERO PROFIT CARD — live pulse glow on value change
-   ========================================================= */
-(function initProfitPulse() {
-  const profitEl = document.getElementById('heroProfit');
-  if (!profitEl) return;
-
-  /* Watch for textContent mutations and briefly brighten */
-  let pulseTmo;
-  const mo = new MutationObserver(() => {
-    profitEl.style.textShadow = '0 0 60px rgba(0,230,118,.7)';
-    clearTimeout(pulseTmo);
-    pulseTmo = setTimeout(() => {
-      profitEl.style.textShadow = '0 0 40px rgba(0,230,118,.4)';
-    }, 300);
-  });
-  mo.observe(profitEl, { childList: true, subtree: true, characterData: true });
-})();
-
-
-/* =========================================================
-   9. CURRENT YEAR IN FOOTER
-   ========================================================= */
-(function setYear() {
-  const el = document.querySelector('.footer__bottom .mono:first-child');
-  if (el) {
-    el.textContent = `© ${new Date().getFullYear()} WhatDash. All rights reserved.`;
   }
+
+  return { init };
 })();
+
+/* ================================================================
+   FAQ ACCORDION
+   ================================================================ */
+function initFaq() {
+  $$('.faq-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const body = item.querySelector('.faq-body');
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+
+      // Close all others
+      $$('.faq-trigger').forEach(other => {
+        if (other === btn) return;
+        other.setAttribute('aria-expanded', 'false');
+        const otherBody = other.closest('.faq-item').querySelector('.faq-body');
+        otherBody?.classList.remove('faq-body--open');
+      });
+
+      // Toggle current
+      const next = !isExpanded;
+      btn.setAttribute('aria-expanded', next);
+      body?.classList.toggle('faq-body--open', next);
+    });
+  });
+}
+
+/* ================================================================
+   AUTH MODAL
+   ================================================================ */
+const Auth = (() => {
+  const STORAGE_KEY_USERS   = 'wd_users_v2';
+  const STORAGE_KEY_SESSION = 'wd_session_v2';
+
+  let overlay, modal;
+
+  function open(mode = 'signup') {
+    overlay.classList.add('auth-overlay--open');
+    document.body.style.overflow = 'hidden';
+    setMode(mode);
+
+    // Focus first field
+    setTimeout(() => {
+      const first = modal.querySelector('input:not([type="hidden"])');
+      first?.focus();
+    }, 260);
+  }
+
+  function close() {
+    overlay.classList.remove('auth-overlay--open');
+    document.body.style.overflow = '';
+    clearErrors();
+  }
+
+  function setMode(mode) {
+    const loginForm   = $('#loginForm');
+    const signupForm  = $('#signupForm');
+    const tabLogin    = $('#tabLogin');
+    const tabSignup   = $('#tabSignup');
+    const heading     = $('#authTitle');
+    const subheading  = $('#authSubtitle');
+
+    if (mode === 'login') {
+      loginForm.hidden  = false;
+      signupForm.hidden = true;
+      tabLogin.classList.add('auth-tab--active');
+      tabSignup.classList.remove('auth-tab--active');
+      tabLogin.setAttribute('aria-selected', 'true');
+      tabSignup.setAttribute('aria-selected', 'false');
+      if (heading) heading.textContent = 'Welcome back';
+      if (subheading) subheading.textContent = 'Enter your details to continue.';
+    } else {
+      loginForm.hidden  = true;
+      signupForm.hidden = false;
+      tabLogin.classList.remove('auth-tab--active');
+      tabSignup.classList.add('auth-tab--active');
+      tabLogin.setAttribute('aria-selected', 'false');
+      tabSignup.setAttribute('aria-selected', 'true');
+      if (heading) heading.textContent = 'Create your account';
+      if (subheading) subheading.textContent = 'Free plan. No credit card required.';
+    }
+  }
+
+  function showError(id, msg) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('auth-error--visible');
+    el.setAttribute('role', 'alert');
+    setTimeout(() => el.classList.remove('auth-error--visible'), 5000);
+  }
+
+  function clearErrors() {
+    $$('.auth-error').forEach(el => el.classList.remove('auth-error--visible'));
+  }
+
+  function getUsers() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]'); }
+    catch (_) { return []; }
+  }
+  function saveUsers(users) {
+    try { localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users)); }
+    catch (_) {}
+  }
+  function saveSession(user) {
+    try { localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(user)); }
+    catch (_) {}
+  }
+  function getSession() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY_SESSION)); }
+    catch (_) { return null; }
+  }
+  function clearSession() {
+    try { localStorage.removeItem(STORAGE_KEY_SESSION); }
+    catch (_) {}
+  }
+
+  function handleSignup() {
+    const name  = $('#signupName')?.value.trim()  || '';
+    const email = $('#signupEmail')?.value.trim() || '';
+    const pass  = $('#signupPassword')?.value     || '';
+
+    if (!name)                   return showError('signupError', 'Please enter your name.');
+    if (!email.includes('@'))    return showError('signupError', 'Please enter a valid email address.');
+    if (pass.length < 8)         return showError('signupError', 'Password must be at least 8 characters.');
+
+    const users = getUsers();
+    if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+      return showError('signupError', 'An account with this email already exists. Try logging in.');
+    }
+
+    const user = { name, email, pass };
+    users.push(user);
+    saveUsers(users);
+    saveSession({ name, email });
+    close();
+    Dashboard.mount({ name, email });
+  }
+
+  function handleLogin() {
+    const email = $('#loginEmail')?.value.trim() || '';
+    const pass  = $('#loginPassword')?.value     || '';
+
+    if (!email) return showError('loginError', 'Please enter your email address.');
+    if (!pass)  return showError('loginError', 'Please enter your password.');
+
+    const users = getUsers();
+    const user  = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.pass === pass);
+
+    if (!user) return showError('loginError', 'Incorrect email or password. Please try again.');
+
+    saveSession({ name: user.name, email: user.email });
+    close();
+    Dashboard.mount(user);
+  }
+
+  function init() {
+    overlay = $('#authOverlay');
+    modal   = overlay?.querySelector('.auth-modal');
+    if (!overlay) return;
+
+    // Open triggers
+    $$('[data-auth-open]').forEach(btn => {
+      btn.addEventListener('click', () => open(btn.dataset.authOpen));
+    });
+
+    // Close
+    $('#authClose')?.addEventListener('click', close);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('auth-overlay--open')) close();
+    });
+
+    // Tabs
+    $('#tabLogin')?.addEventListener('click',  () => setMode('login'));
+    $('#tabSignup')?.addEventListener('click', () => setMode('signup'));
+
+    // Switch links
+    $('#switchToSignup')?.addEventListener('click', (e) => { e.preventDefault(); setMode('signup'); });
+    $('#switchToLogin')?.addEventListener('click',  (e) => { e.preventDefault(); setMode('login'); });
+
+    // Submit buttons
+    $('#signupSubmit')?.addEventListener('click', handleSignup);
+    $('#loginSubmit')?.addEventListener('click',  handleLogin);
+
+    // Enter key on inputs
+    ['loginEmail', 'loginPassword'].forEach(id => {
+      document.getElementById(id)?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleLogin();
+      });
+    });
+    ['signupName', 'signupEmail', 'signupPassword'].forEach(id => {
+      document.getElementById(id)?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleSignup();
+      });
+    });
+
+    // Restore session
+    const session = getSession();
+    if (session) {
+      Dashboard.mount(session);
+    }
+  }
+
+  return { init, open, close, clearSession };
+})();
+
+/* ================================================================
+   DASHBOARD
+   ================================================================ */
+const Dashboard = (() => {
+  function mount(user) {
+    const landing   = $('#landingPage');
+    const dashPage  = $('#dashboardPage');
+    if (!landing || !dashPage) return;
+
+    landing.hidden = true;
+    dashPage.classList.add('page-dashboard--active');
+
+    // User info
+    const initials = user.name
+      ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+      : user.email.slice(0, 2).toUpperCase();
+
+    const avatar   = $('#dashAvatar');
+    const username = $('#dashUsername');
+    if (avatar)   avatar.textContent   = initials;
+    if (username) username.textContent = user.email;
+
+    // Date subtitle
+    const dateEl = $('#dashDate');
+    if (dateEl) {
+      const now = new Date();
+      dateEl.textContent = `Last 30 days · ${now.toLocaleDateString('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric'
+      })}`;
+    }
+
+    // Animate live profit counter
+    initLiveProfitCounter();
+
+    // Reveal dashboard elements
+    Reveal.observe(dashPage);
+
+    window.scrollTo(0, 0);
+  }
+
+  function unmount() {
+    const landing  = $('#landingPage');
+    const dashPage = $('#dashboardPage');
+    if (!landing || !dashPage) return;
+
+    landing.hidden = false;
+    dashPage.classList.remove('page-dashboard--active');
+    window.scrollTo(0, 0);
+  }
+
+  function init() {
+    $('#dashLogout')?.addEventListener('click', () => {
+      Auth.clearSession();
+      unmount();
+    });
+
+    $('#dashLogoHome')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      Auth.clearSession();
+      unmount();
+    });
+  }
+
+  return { init, mount, unmount };
+})();
+
+/* ================================================================
+   FOOTER YEAR
+   ================================================================ */
+function initFooterYear() {
+  const el = $('#footerYear');
+  if (el) el.textContent = `© ${new Date().getFullYear()} WhatDash. All rights reserved.`;
+}
+
+/* ================================================================
+   MAIN INIT
+   ================================================================ */
+function init() {
+  Theme.init();
+  Navbar.init();
+  initSmoothScroll();
+  Reveal.init();
+  initPlatformBars();
+  initPhoneProfitCounter();
+  Terminal.init();
+  initFaq();
+  Auth.init();
+  Dashboard.init();
+  initFooterYear();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}

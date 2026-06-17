@@ -1,684 +1,1027 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WhatDash — Real-Time Profit Tracking for Live Sellers</title>
-  <meta name="description" content="Track profit, revenue, cost, and inventory in real time across Whatnot, TikTok Shop, and Amazon Live. Know your real profit during every live sale." />
-  <meta property="og:title" content="WhatDash — Real-Time Profit Tracking for Live Sellers" />
-  <meta property="og:description" content="Track profit, revenue, cost, and inventory in real time across Whatnot, TikTok Shop, and Amazon Live." />
+  <title>WhatDash — Know Your Real Profit, Live</title>
+  <meta name="description" content="Real-time profit tracking for live sellers on Whatnot, TikTok Shop, and Amazon Live. Know your exact profit the second you register a sale." />
+  <meta name="theme-color" content="#000000" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="WhatDash — Know Your Real Profit, Live" />
+  <meta property="og:description" content="Real-time profit tracking for live sellers. Stop guessing. Know your numbers." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://whatdash.io" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="WhatDash — Real-Time Profit Tracking for Live Sellers" />
-  <meta name="twitter:description" content="Track profit, revenue, cost, and inventory in real time across Whatnot, TikTok Shop, and Amazon Live." />
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- FIX #1: was "styles.css", corrected to "style.css" -->
   <link rel="stylesheet" href="style.css" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "WhatDash",
-    "applicationCategory": "BusinessApplication",
-    "description": "Real-time profit tracking for live sellers on Whatnot, TikTok Shop, and Amazon Live.",
-    "url": "https://whatdash.io",
-    "offers": [
-      { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
-      { "@type": "Offer", "name": "Pro", "price": "29", "priceCurrency": "USD" },
-      { "@type": "Offer", "name": "Business", "price": "79", "priceCurrency": "USD" }
-    ]
-  }
-  </script>
 </head>
 <body>
-
-  <!-- ========== NAVBAR ========== -->
-  <header class="navbar" id="navbar">
+<!-- ================================================================
+     LANDING PAGE
+     ================================================================ -->
+<div id="landingPage">
+  <!-- ── NAVBAR ── -->
+  <header class="navbar" id="navbar" role="banner">
     <div class="container navbar__inner">
-      <a href="#" class="navbar__logo">
-        <div class="navbar__logo-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <a href="#" class="navbar__logo" aria-label="WhatDash — home">
+        <div class="navbar__logo-mark" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
         </div>
-        <span>What<span class="text-profit">Dash</span></span>
+        WhatDash
       </a>
-
-      <nav class="navbar__links" id="navLinks">
+      <nav class="navbar__nav" aria-label="Primary navigation">
         <a href="#features" class="navbar__link">Features</a>
-        <a href="#pricing" class="navbar__link">Pricing</a>
-        <a href="#faq" class="navbar__link">FAQ</a>
+        <a href="#pricing"  class="navbar__link">Pricing</a>
+        <a href="#faq"      class="navbar__link">FAQ</a>
       </nav>
-
-      <div class="navbar__cta" id="navCta">
-        <a href="#" class="btn btn--ghost">Log in</a>
-        <a href="#" class="btn btn--primary btn--sm">Start Free</a>
+      <div class="navbar__actions">
+        <button class="theme-toggle" data-action="toggle-theme" aria-label="Toggle colour theme">
+          <svg data-theme-sun width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg data-theme-moon width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="btn btn--ghost btn--sm" data-auth-open="login">Log in</button>
+        <button class="btn btn--primary btn--sm" data-auth-open="signup">Start free</button>
       </div>
-
-      <button class="navbar__hamburger" id="hamburger" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
+      <!-- Hamburger (mobile) -->
+      <button class="hamburger" id="hamburger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
       </button>
     </div>
-
     <!-- Mobile menu -->
-    <div class="navbar__mobile" id="mobileMenu">
-      <a href="#features" class="navbar__mobile-link">Features</a>
-      <a href="#pricing" class="navbar__mobile-link">Pricing</a>
-      <a href="#faq" class="navbar__mobile-link">FAQ</a>
-      <div class="navbar__mobile-cta">
-        <a href="#" class="btn btn--ghost btn--full">Log in</a>
-        <a href="#" class="btn btn--primary btn--full">Start Free</a>
+    <nav class="mobile-menu" id="mobileMenu" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="mobile-menu__nav">
+        <a href="#features" class="mobile-menu__link">Features</a>
+        <a href="#pricing"  class="mobile-menu__link">Pricing</a>
+        <a href="#faq"      class="mobile-menu__link">FAQ</a>
       </div>
-    </div>
+      <div class="mobile-menu__actions">
+        <button class="btn btn--outline btn--full" data-auth-open="login">Log in</button>
+        <button class="btn btn--primary btn--full" data-auth-open="signup">Start free</button>
+      </div>
+    </nav>
   </header>
 
-  <main>
-
-    <!-- ========== HERO ========== -->
-    <section class="hero" id="hero">
-      <div class="hero__grid-bg"></div>
-      <div class="hero__glow"></div>
-
-      <div class="container hero__content">
-        <div class="hero__badge reveal">
-          <span class="hero__badge-dot"></span>
-          <span class="mono text-muted" style="font-size:11px;letter-spacing:.1em;">LIVE PROFIT TRACKING</span>
-        </div>
-
-        <h1 class="hero__headline reveal reveal--delay-1">
-          Know Your Real Profit<br />
-          <span class="text-profit hero__headline-glow">During Every Live Sale</span>
-        </h1>
-
-        <p class="hero__sub reveal reveal--delay-2">Track profit, revenue, cost, and inventory in real time across</p>
-        <div class="hero__platforms reveal reveal--delay-2">
-          <span>Whatnot</span>
-          <span class="hero__platform-dot">·</span>
-          <span>TikTok Shop</span>
-          <span class="hero__platform-dot">·</span>
-          <span>Amazon Live</span>
-        </div>
-
-        <div class="hero__ctas reveal reveal--delay-3">
-          <a href="#" class="btn btn--primary btn--lg">
-            Start Free Trial
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </a>
-          <a href="#demo" class="btn btn--outline btn--lg">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            View Demo
-          </a>
-        </div>
-
-        <div class="profit-card reveal reveal--delay-4">
-          <div class="profit-card__header">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            <span class="mono text-muted" style="font-size:11px;letter-spacing:.1em;">NET PROFIT · LIVE SESSION</span>
-            <span class="live-badge">
-              <span class="live-badge__dot"></span>
-              <span class="mono text-profit" style="font-size:11px;">LIVE</span>
-            </span>
+  <main id="main-content">
+    <!-- ── HERO ── -->
+    <section class="hero" id="hero" aria-label="Hero">
+      <div class="hero__noise" aria-hidden="true"></div>
+      <div class="hero__orb hero__orb--1" aria-hidden="true"></div>
+      <div class="hero__orb hero__orb--2" aria-hidden="true"></div>
+      <div class="container hero__inner">
+        <!-- Copy -->
+        <div class="hero__copy">
+          <div class="hero__eyebrow reveal" aria-hidden="true">
+            <span class="hero__eyebrow-dot"></span>
+            <span class="hero__eyebrow-text">Real-time profit tracking</span>
           </div>
-          <div class="profit-card__value mono text-profit" id="heroProfit">$0.00</div>
-          <div class="profit-card__breakdown mono">
-            <span><span class="text-muted">Revenue </span><span class="text-revenue">$8,940.00</span></span>
-            <span class="text-muted" style="color:#333">−</span>
-            <span><span class="text-muted">Cost </span><span class="text-cost">$4,652.50</span></span>
+          <h1 class="hero__h1 reveal reveal--d1">
+            Know exactly what you made<br>
+            <em class="hero__h1-accent">during every live sale.</em>
+          </h1>
+          <p class="hero__sub reveal reveal--d2">
+            WhatDash tracks profit, revenue, cost, and inventory the moment you register a sale — so you never end a stream guessing.
+          </p>
+          <div class="hero__platforms reveal reveal--d2" aria-label="Supported platforms">
+            <span class="platform-chip">Whatnot</span>
+            <span class="platform-chip">TikTok Shop</span>
+            <span class="platform-chip">Amazon Live</span>
           </div>
+          <div class="hero__ctas reveal reveal--d3">
+            <button class="btn btn--primary btn--lg" data-auth-open="signup">
+              Start for free
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+            <a href="#demo" class="btn btn--outline btn--lg">See a demo</a>
+          </div>
+          <p class="hero__disclaimer reveal reveal--d4">
+            No credit card required<span class="hero__disclaimer-sep" aria-hidden="true">·</span>Free plan always available<span class="hero__disclaimer-sep" aria-hidden="true">·</span>5-min setup
+          </p>
         </div>
-
-        <p class="hero__disclaimer mono text-muted reveal reveal--delay-4">No credit card required · Free plan available · 5-minute setup</p>
-      </div>
-    </section>
-
-    <!-- ========== TERMINAL ========== -->
-    <section class="terminal-section" id="demo">
-      <div class="container">
-        <div class="section-label reveal">See It in Action</div>
-        <h2 class="section-title reveal reveal--delay-1">Your stream. Your numbers. <span class="text-profit">Instantly.</span></h2>
-
-        <div class="terminal reveal reveal--delay-2" id="terminal">
-          <div class="terminal__bar">
-            <div class="terminal__dots">
-              <span class="terminal__dot terminal__dot--red"></span>
-              <span class="terminal__dot terminal__dot--yellow"></span>
-              <span class="terminal__dot terminal__dot--green"></span>
-            </div>
-            <span class="mono terminal__title">whatdash — live tracker</span>
-          </div>
-          <div class="terminal__body" id="terminalBody">
-            <!-- Lines injected by JS -->
-          </div>
-        </div>
-
-        <div class="terminal-replay">
-          <button class="terminal-replay__btn" id="replayBtn">Replay simulation</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== DASHBOARD PREVIEW ========== -->
-    <section class="dashboard-section">
-      <div class="container">
-        <div class="section-label reveal">Dashboard Preview</div>
-        <h2 class="section-title reveal reveal--delay-1">Every number that matters, <span class="text-revenue">at a glance</span></h2>
-        <p class="section-desc reveal reveal--delay-2">Your WhatDash overview shows profit, revenue, margins, and sessions across all platforms in one clean view.</p>
-
-        <div class="mock-dashboard reveal reveal--delay-2">
-          <!-- Top bar -->
-          <div class="mock-dashboard__bar">
-            <div class="mock-dashboard__bar-left">
-              <span class="mock-dashboard__title">Overview</span>
-              <span class="text-muted" style="font-size:12px;">Last 30 days</span>
-            </div>
-            <div class="live-badge">
-              <span class="live-badge__dot"></span>
-              <span class="mono text-profit" style="font-size:11px;">1 session live</span>
-            </div>
-          </div>
-
-          <!-- KPI cards -->
-          <div class="kpi-grid">
-            <div class="kpi-card">
-              <span class="kpi-card__label">Net Profit</span>
-              <span class="kpi-card__value mono" style="color:#00E676;">$12,847</span>
-              <div class="kpi-card__trend kpi-card__trend--up">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                <span class="mono">+18.4%</span>
-                <span class="text-muted" style="font-size:11px;">vs last 7 days</span>
-              </div>
-            </div>
-            <div class="kpi-card">
-              <span class="kpi-card__label">Total Revenue</span>
-              <span class="kpi-card__value mono" style="color:#4FC3F7;">$31,290</span>
-              <div class="kpi-card__trend kpi-card__trend--up">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                <span class="mono">+12.1%</span>
-                <span class="text-muted" style="font-size:11px;">vs last 7 days</span>
-              </div>
-            </div>
-            <div class="kpi-card">
-              <span class="kpi-card__label">Avg Margin</span>
-              <span class="kpi-card__value mono" style="color:#FFD600;">41.1%</span>
-              <div class="kpi-card__trend kpi-card__trend--down">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
-                <span class="mono">-2.3%</span>
-                <span class="text-muted" style="font-size:11px;">vs last 7 days</span>
-              </div>
-            </div>
-            <div class="kpi-card">
-              <span class="kpi-card__label">Live Sessions</span>
-              <span class="kpi-card__value mono" style="color:#888;">24</span>
-              <div class="kpi-card__trend kpi-card__trend--up">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                <span class="mono">+6</span>
-                <span class="text-muted" style="font-size:11px;">this month</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Platform + Sessions -->
-          <div class="mock-panels">
-            <div class="mock-panel">
-              <div class="mock-panel__header">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                <span class="text-muted" style="font-size:13px;">Platform Performance</span>
-              </div>
-              <div class="platform-bars">
-                <div class="platform-bar">
-                  <div class="platform-bar__info">
-                    <span class="platform-bar__dot" style="background:#00E676;"></span>
-                    <span class="text-muted" style="font-size:12px;">Whatnot</span>
+        <!-- Phone mockup -->
+        <div class="phone-wrap reveal reveal--d3">
+          <div class="phone-glow" aria-hidden="true"></div>
+          <div class="phone" aria-hidden="true" role="img" aria-label="WhatDash mobile app showing live profit tracking">
+            <div class="phone__frame">
+              <!-- Physical buttons (decorative) -->
+              <div class="phone__btn-power"></div>
+              <div class="phone__btn-vol-up"></div>
+              <div class="phone__btn-vol-down"></div>
+              <div class="phone__screen">
+                <div class="phone__island"></div>
+                <div class="phone-ui">
+                  <div class="phone-ui__header">
+                    <div class="phone-ui__title">What<span class="phone-ui__title-accent">Dash</span></div>
+                    <div class="phone-ui__live-badge">
+                      <span class="phone-ui__live-dot"></span>
+                      LIVE
+                    </div>
                   </div>
-                  <div class="platform-bar__numbers mono">
-                    <span class="text-revenue">$14,200</span>
-                    <span class="text-profit">$5,820</span>
+                  <div class="phone-ui__profit">
+                    <div class="phone-ui__profit-label">Net Profit · Session</div>
+                    <!-- FIX #3: profit value starts at $0.00, animated to $4,288.00 (8940-4652) matching the pills -->
+                    <div class="phone-ui__profit-value" id="phoneProfit">$0.00</div>
+                    <div class="phone-ui__profit-pills">
+                      <span class="phone-pill phone-pill--rev">Rev $8,940</span>
+                      <span class="phone-pill phone-pill--cost">Cost $4,652</span>
+                    </div>
                   </div>
-                  <div class="platform-bar__track">
-                    <div class="platform-bar__fill" style="width:85%;background:#00E676;"></div>
+                  <div class="phone-ui__kpis">
+                    <div class="phone-kpi"><div class="phone-kpi__label">Margin</div><div class="phone-kpi__value phone-kpi__value--accent">48.0%</div></div>
+                    <div class="phone-kpi"><div class="phone-kpi__label">Sales</div><div class="phone-kpi__value">24</div></div>
+                    <div class="phone-kpi"><div class="phone-kpi__label">Duration</div><div class="phone-kpi__value">01:22</div></div>
+                    <div class="phone-kpi"><div class="phone-kpi__label">Avg/sale</div><div class="phone-kpi__value">$179</div></div>
                   </div>
-                </div>
-                <div class="platform-bar">
-                  <div class="platform-bar__info">
-                    <span class="platform-bar__dot" style="background:#FF4444;"></span>
-                    <span class="text-muted" style="font-size:12px;">TikTok Shop</span>
+                  <div class="phone-ui__activity">
+                    <div class="phone-ui__activity-title">Recent Sales</div>
+                    <div class="sale-row">
+                      <div class="sale-row__left"><span class="sale-row__dot"></span><span class="sale-row__name">Vintage Coach Bag</span></div>
+                      <span class="sale-row__profit">+$83</span>
+                    </div>
+                    <div class="sale-row">
+                      <div class="sale-row__left"><span class="sale-row__dot"></span><span class="sale-row__name">Nike SB Dunk Low</span></div>
+                      <span class="sale-row__profit">+$170</span>
+                    </div>
+                    <div class="sale-row">
+                      <div class="sale-row__left"><span class="sale-row__dot"></span><span class="sale-row__name">Y2K Levi Jeans ×2</span></div>
+                      <span class="sale-row__profit">+$56</span>
+                    </div>
                   </div>
-                  <div class="platform-bar__numbers mono">
-                    <span class="text-revenue">$10,800</span>
-                    <span class="text-profit">$4,310</span>
-                  </div>
-                  <div class="platform-bar__track">
-                    <div class="platform-bar__fill" style="width:64%;background:#FF4444;"></div>
-                  </div>
-                </div>
-                <div class="platform-bar">
-                  <div class="platform-bar__info">
-                    <span class="platform-bar__dot" style="background:#4FC3F7;"></span>
-                    <span class="text-muted" style="font-size:12px;">Amazon Live</span>
-                  </div>
-                  <div class="platform-bar__numbers mono">
-                    <span class="text-revenue">$6,290</span>
-                    <span class="text-profit">$2,717</span>
-                  </div>
-                  <div class="platform-bar__track">
-                    <div class="platform-bar__fill" style="width:37%;background:#4FC3F7;"></div>
-                  </div>
+                  <nav class="phone-ui__nav" aria-label="App navigation (decorative)">
+                    <div class="phone-nav-item phone-nav-item--active">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                      <span class="phone-nav-item__label">Live</span>
+                    </div>
+                    <div class="phone-nav-item">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                      <span class="phone-nav-item__label">Overview</span>
+                    </div>
+                    <div class="phone-nav-item">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                      <span class="phone-nav-item__label">History</span>
+                    </div>
+                    <div class="phone-nav-item">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      <span class="phone-nav-item__label">Profile</span>
+                    </div>
+                  </nav>
                 </div>
               </div>
             </div>
-
-            <div class="mock-panel">
-              <div class="mock-panel__header">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                <span class="text-muted" style="font-size:13px;">Recent Live Sessions</span>
-              </div>
-              <div class="session-list">
-                <div class="session-row">
-                  <div>
-                    <div class="session-row__platform"><span class="platform-bar__dot" style="background:#00E676;"></span>Whatnot</div>
-                    <div class="session-row__meta">2h 14m · 38 sales</div>
-                  </div>
-                  <div class="session-row__right">
-                    <span class="mono text-profit">$1,180</span>
-                    <span class="mono text-muted" style="font-size:11px;">41.5%</span>
-                  </div>
-                </div>
-                <div class="session-row">
-                  <div>
-                    <div class="session-row__platform"><span class="platform-bar__dot" style="background:#FF4444;"></span>TikTok Shop</div>
-                    <div class="session-row__meta">1h 48m · 22 sales</div>
-                  </div>
-                  <div class="session-row__right">
-                    <span class="mono text-profit">$712</span>
-                    <span class="mono text-muted" style="font-size:11px;">37.1%</span>
-                  </div>
-                </div>
-                <div class="session-row" style="border-bottom:none;">
-                  <div>
-                    <div class="session-row__platform"><span class="platform-bar__dot" style="background:#00E676;"></span>Whatnot</div>
-                    <div class="session-row__meta">3h 02m · 51 sales</div>
-                  </div>
-                  <div class="session-row__right">
-                    <span class="mono text-profit">$1,540</span>
-                    <span class="mono text-muted" style="font-size:11px;">45.2%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <p class="mono text-muted" style="text-align:center;font-size:12px;margin-top:1.5rem;">
-          Sample data shown · Your real numbers update instantly during every live session
-        </p>
-      </div>
-    </section>
-
-    <!-- ========== FEATURES ========== -->
-    <section class="features-section" id="features">
-      <div class="container">
-        <div class="section-label reveal">Features</div>
-        <h2 class="section-title reveal reveal--delay-1">Built for sellers who sell <span class="text-profit">fast</span></h2>
-        <p class="section-desc reveal reveal--delay-2">WhatDash strips away everything that slows you down during a live session. Just the numbers you need, when you need them.</p>
-
-        <div class="features-grid">
-          <div class="feature-card reveal">
-            <div class="feature-card__icon" style="background:rgba(0,230,118,.08);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            </div>
-            <h3 class="feature-card__title">Real-Time Profit</h3>
-            <p class="feature-card__desc">Every sale updates your profit instantly. No manual math. No end-of-stream surprises.</p>
-          </div>
-          <div class="feature-card reveal">
-            <div class="feature-card__icon" style="background:rgba(79,195,247,.08);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4FC3F7" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            </div>
-            <h3 class="feature-card__title">Multi-Platform Analytics</h3>
-            <p class="feature-card__desc">Track performance across Whatnot, TikTok Shop, and Amazon Live from one dashboard.</p>
-          </div>
-          <div class="feature-card reveal">
-            <div class="feature-card__icon" style="background:rgba(255,214,0,.08);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFD600" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            </div>
-            <h3 class="feature-card__title">Inventory Management</h3>
-            <p class="feature-card__desc">Stock counts update automatically when a sale is registered. Know exactly what's left.</p>
-          </div>
-          <div class="feature-card reveal">
-            <div class="feature-card__icon" style="background:rgba(136,136,136,.08);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
-            <h3 class="feature-card__title">Session Timer &amp; History</h3>
-            <p class="feature-card__desc">Timed live sessions with full history — duration, revenue, margin, and every sale.</p>
-          </div>
-          <div class="feature-card reveal">
-            <div class="feature-card__icon" style="background:rgba(0,230,118,.08);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <h3 class="feature-card__title">Team Collaboration</h3>
-            <p class="feature-card__desc">Invite team members to your account. Track sales together during streams.</p>
-          </div>
-          <div class="feature-card reveal">
-            <div class="feature-card__icon" style="background:rgba(79,195,247,.08);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4FC3F7" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            </div>
-            <h3 class="feature-card__title">Margin Intelligence</h3>
-            <p class="feature-card__desc">See margin % on every product and session. Know which items actually move the needle.</p>
-          </div>
-          <div class="feature-card reveal">
-            <div class="feature-card__icon" style="background:rgba(255,214,0,.08);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFD600" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            </div>
-            <h3 class="feature-card__title">Product Catalog</h3>
-            <p class="feature-card__desc">Maintain a catalog of products with costs, sale prices, SKUs, and categories.</p>
-          </div>
-          <div class="feature-card reveal">
-            <div class="feature-card__icon" style="background:rgba(136,136,136,.08);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <h3 class="feature-card__title">Secure &amp; Private</h3>
-            <p class="feature-card__desc">Your data is protected with Row Level Security. No cross-tenant access, ever.</p>
-          </div>
-          <div class="feature-card reveal">
-            <div class="feature-card__icon" style="background:rgba(0,230,118,.08);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-            </div>
-            <h3 class="feature-card__title">Instant Sale Registration</h3>
-            <p class="feature-card__desc">Add a sale in seconds during a stream. Product, quantity, price — done.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ========== PRICING ========== -->
-    <section class="pricing-section" id="pricing">
+    <!-- ── FEATURES ── -->
+    <section class="features" id="features" aria-labelledby="features-heading">
       <div class="container">
-        <div class="section-label reveal">Pricing</div>
-        <h2 class="section-title reveal reveal--delay-1">Simple, honest pricing</h2>
-        <p class="section-desc reveal reveal--delay-2">Start free. Upgrade when you need more. Cancel any time.</p>
+        <div class="text-center" style="margin-bottom:56px">
+          <p class="section-eyebrow reveal">Product</p>
+          <h2 class="section-h2 reveal reveal--d1" id="features-heading">Built for the speed of live selling</h2>
+          <p class="section-desc reveal reveal--d2">Every feature is designed to work during a live session, not after. Your numbers update as you sell.</p>
+        </div>
+        <div class="features-grid reveal reveal--d1">
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h3 class="feature-card__title">Profit in real time</h3>
+            <p class="feature-card__desc">Register a sale and instantly see your net profit update. No spreadsheet, no delay. Built on Supabase Realtime.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3 class="feature-card__title">Smart inventory sync</h3>
+            <p class="feature-card__desc">Stock depletes the moment you sell. No more overselling pieces you already moved in the first hour.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <h3 class="feature-card__title">Multi-platform overview</h3>
+            <p class="feature-card__desc">Compare Whatnot, TikTok Shop, and Amazon Live side by side. See which platform actually earns you the most.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3 class="feature-card__title">Team collaboration</h3>
+            <p class="feature-card__desc">Invite team members to register sales. Everyone sees the same live numbers. Perfect for high-volume streams.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <h3 class="feature-card__title">Session analytics</h3>
+            <p class="feature-card__desc">Every session saves a full breakdown: revenue, cost, margin, duration, and item-level detail. Your history, always on hand.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <h3 class="feature-card__title">One-tap export</h3>
+            <p class="feature-card__desc">Download a full CSV of any session or time range. Hand it to your accountant or import it into your own tools.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- ── LIVE DEMO TERMINAL ── -->
+    <section class="section--alt" id="demo" aria-labelledby="demo-heading">
+      <div class="container">
+        <div class="text-center" style="margin-bottom:48px">
+          <p class="section-eyebrow reveal">Live Demo</p>
+          <h2 class="section-h2 reveal reveal--d1" id="demo-heading">Watch it track in real time</h2>
+          <p class="section-desc reveal reveal--d2">This is exactly what you see during a live session. Every sale logs instantly — profit updates before you say the price.</p>
+        </div>
+        <div class="demo-terminal reveal reveal--d2" id="terminal" role="region" aria-label="Terminal demo of WhatDash live session tracking">
+          <div class="terminal-bar" aria-hidden="true">
+            <div class="terminal-dots">
+              <span class="terminal-dot terminal-dot--red"></span>
+              <span class="terminal-dot terminal-dot--amber"></span>
+              <span class="terminal-dot terminal-dot--green"></span>
+            </div>
+            <span class="terminal-title">whatdash — live session tracker</span>
+          </div>
+          <div class="terminal-body" id="terminalBody" aria-live="polite" aria-label="Live session output"></div>
+          <div class="terminal-replay">
+            <button class="terminal-replay__btn" id="replayBtn">↩ Replay demo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── DASHBOARD PREVIEW ── -->
+    <section id="dashboard-preview" aria-labelledby="dashboard-preview-heading">
+      <div class="container">
+        <div class="text-center" style="margin-bottom:48px">
+          <p class="section-eyebrow reveal">Dashboard</p>
+          <h2 class="section-h2 reveal reveal--d1" id="dashboard-preview-heading">Everything at a glance</h2>
+          <p class="section-desc reveal reveal--d2">After your session, the overview dashboard gives you a complete financial picture across all your streams.</p>
+        </div>
+        <div class="dash-preview reveal reveal--d2">
+          <div class="dash-topbar">
+            <div class="dash-topbar__title">
+              Overview
+              <span class="dash-live-badge"><span class="dash-live-badge__dot" aria-hidden="true"></span>1 session live</span>
+            </div>
+            <div class="dash-topbar__right" role="group" aria-label="Time range">
+              <button class="period-btn">7d</button>
+              <button class="period-btn period-btn--active" aria-pressed="true">30d</button>
+              <button class="period-btn">90d</button>
+            </div>
+          </div>
+          <div class="kpi-strip" role="list">
+            <div class="kpi-card" role="listitem">
+              <div class="kpi-card__label">Net Profit</div>
+              <div class="kpi-card__value kpi-card__value--profit">$12,847</div>
+              <div class="kpi-trend kpi-trend--up" aria-label="Up 18.4 percent versus last 30 days">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+                +18.4%<span class="kpi-trend__meta">vs last 30d</span>
+              </div>
+            </div>
+            <div class="kpi-card" role="listitem">
+              <div class="kpi-card__label">Total Revenue</div>
+              <div class="kpi-card__value kpi-card__value--rev">$31,290</div>
+              <div class="kpi-trend kpi-trend--up" aria-label="Up 12.1 percent versus last 30 days">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+                +12.1%<span class="kpi-trend__meta">vs last 30d</span>
+              </div>
+            </div>
+            <div class="kpi-card" role="listitem">
+              <div class="kpi-card__label">Avg Margin</div>
+              <div class="kpi-card__value kpi-card__value--accent">41.1%</div>
+              <div class="kpi-trend kpi-trend--down" aria-label="Down 2.3 percent versus last 30 days">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                -2.3%<span class="kpi-trend__meta">vs last 30d</span>
+              </div>
+            </div>
+            <div class="kpi-card" role="listitem">
+              <div class="kpi-card__label">Live Sessions</div>
+              <div class="kpi-card__value kpi-card__value--neutral">24</div>
+              <div class="kpi-trend kpi-trend--up" aria-label="6 more than last month">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+                +6<span class="kpi-trend__meta">this month</span>
+              </div>
+            </div>
+          </div>
+          <div class="preview-body">
+            <div class="preview-chart">
+              <div class="preview-chart__title">Profit over time — 30 days</div>
+              <svg class="chart-svg" viewBox="0 0 600 140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" role="img" aria-label="Profit trend chart showing upward growth over 30 days">
+                <defs>
+                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="#22C55E" stop-opacity="0.28"/>
+                    <stop offset="100%" stop-color="#22C55E" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,100 C30,95 40,80 60,75 C80,70 90,85 110,65 C130,45 140,50 160,40 C180,30 190,55 210,45 C230,35 240,20 260,25 C280,30 290,15 310,10 C330,5 340,30 360,20 C380,10 390,35 410,25 C430,15 440,10 460,15 C480,20 490,5 510,8 C530,11 540,20 560,15 C580,10 590,18 600,12 L600,140 L0,140 Z" fill="url(#chartGrad)"/>
+                <path d="M0,100 C30,95 40,80 60,75 C80,70 90,85 110,65 C130,45 140,50 160,40 C180,30 190,55 210,45 C230,35 240,20 260,25 C280,30 290,15 310,10 C330,5 340,30 360,20 C380,10 390,35 410,25 C430,15 440,10 460,15 C480,20 490,5 510,8 C530,11 540,20 560,15 C580,10 590,18 600,12" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round"/>
+                <!-- Grid lines -->
+                <line x1="0" y1="12"  x2="600" y2="12"  stroke="currentColor" stroke-opacity=".06" stroke-width="1"/>
+                <line x1="0" y1="70"  x2="600" y2="70"  stroke="currentColor" stroke-opacity=".06" stroke-width="1"/>
+                <line x1="0" y1="130" x2="600" y2="130" stroke="currentColor" stroke-opacity=".06" stroke-width="1"/>
+                <!-- Y-axis labels -->
+                <text x="4" y="15"  fill="currentColor" font-size="8" opacity=".35" font-family="JetBrains Mono, monospace">$500</text>
+                <text x="4" y="73"  fill="currentColor" font-size="8" opacity=".35" font-family="JetBrains Mono, monospace">$250</text>
+                <text x="4" y="133" fill="currentColor" font-size="8" opacity=".35" font-family="JetBrains Mono, monospace">$0</text>
+              </svg>
+            </div>
+            <div class="preview-platforms">
+              <div class="preview-platforms__title">Platform breakdown</div>
+              <div class="pbar">
+                <div class="pbar__header">
+                  <span class="pbar__name"><span class="pbar__dot" style="background:#22C55E" aria-hidden="true"></span>Whatnot</span>
+                  <span class="pbar__value">$5,820 profit</span>
+                </div>
+                <div class="pbar__track" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" aria-label="Whatnot 85%">
+                  <div class="pbar__fill" style="background:#22C55E" data-width="85%"></div>
+                </div>
+              </div>
+              <div class="pbar">
+                <div class="pbar__header">
+                  <span class="pbar__name"><span class="pbar__dot" style="background:#EF4444" aria-hidden="true"></span>TikTok Shop</span>
+                  <span class="pbar__value">$4,310 profit</span>
+                </div>
+                <div class="pbar__track" role="progressbar" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100" aria-label="TikTok Shop 64%">
+                  <div class="pbar__fill" style="background:#EF4444" data-width="64%"></div>
+                </div>
+              </div>
+              <div class="pbar">
+                <div class="pbar__header">
+                  <span class="pbar__name"><span class="pbar__dot" style="background:#60A5FA" aria-hidden="true"></span>Amazon Live</span>
+                  <span class="pbar__value">$2,717 profit</span>
+                </div>
+                <div class="pbar__track" role="progressbar" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100" aria-label="Amazon Live 42%">
+                  <div class="pbar__fill" style="background:#60A5FA" data-width="42%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="preview-sessions">
+            <div class="preview-sessions__header">
+              <div class="preview-sessions__title">Recent sessions</div>
+              <a href="#" class="preview-sessions__link" aria-label="View all sessions">View all →</a>
+            </div>
+            <table class="data-table" aria-label="Recent live sessions">
+              <thead>
+                <tr>
+                  <th scope="col">Platform</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Revenue</th>
+                  <th scope="col">Profit</th>
+                  <th scope="col">Margin</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="platform-tag platform-tag--wn">Whatnot</span></td>
+                  <td>Jun 14, 2026</td>
+                  <td class="td-rev">$3,200</td>
+                  <td class="td-profit">$1,350</td>
+                  <td class="td-margin">42.2%</td>
+                </tr>
+                <tr>
+                  <td><span class="platform-tag platform-tag--tt">TikTok</span></td>
+                  <td>Jun 12, 2026</td>
+                  <td class="td-rev">$2,870</td>
+                  <td class="td-profit">$1,180</td>
+                  <td class="td-margin">41.1%</td>
+                </tr>
+                <tr>
+                  <td><span class="platform-tag platform-tag--al">Amazon</span></td>
+                  <td>Jun 10, 2026</td>
+                  <td class="td-rev">$1,940</td>
+                  <td class="td-profit">$740</td>
+                  <td class="td-margin">38.1%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PRICING ── -->
+    <section class="section--alt" id="pricing" aria-labelledby="pricing-heading">
+      <div class="container">
+        <div class="text-center" style="margin-bottom:48px">
+          <p class="section-eyebrow reveal">Pricing</p>
+          <h2 class="section-h2 reveal reveal--d1" id="pricing-heading">Simple, honest pricing</h2>
+          <p class="section-desc reveal reveal--d2">Start free. Upgrade when your business grows. No hidden fees, no annual lock-in.</p>
+        </div>
         <div class="pricing-grid">
           <!-- Free -->
           <div class="pricing-card reveal">
-            <div class="pricing-card__top">
-              <span class="pricing-card__name">Free</span>
-              <div class="pricing-card__price">
-                <span class="mono pricing-card__amount">$0</span>
-                <span class="text-muted pricing-card__period">/forever</span>
-              </div>
-              <p class="text-muted" style="font-size:13px;">Get started with the basics.</p>
+            <div class="pricing-card__tier">Free</div>
+            <div class="pricing-card__price">
+              <span class="pricing-card__amount">$0</span><span class="pricing-card__period">/month</span>
             </div>
-            <a href="#" class="btn btn--outline btn--full pricing-card__cta">Get Started</a>
-            <ul class="pricing-card__features">
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>1 active live session</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Up to 100 products</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Single user</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Overview dashboard</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Basic analytics</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Inventory management</li>
+            <p class="pricing-card__desc">For sellers just getting started who want real numbers without any commitment.</p>
+            <div class="pricing-card__cta">
+              <button class="btn btn--outline btn--full" data-auth-open="signup">Get started free</button>
+            </div>
+            <ul class="pricing-features">
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--muted" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>1 active live session</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--muted" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Up to 100 products</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--muted" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Overview dashboard</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--muted" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Session history (last 10)</li>
             </ul>
           </div>
-
           <!-- Pro (featured) -->
-          <div class="pricing-card pricing-card--featured reveal">
-            <div class="pricing-card__badge">MOST POPULAR</div>
-            <div class="pricing-card__top">
-              <span class="pricing-card__name">Pro</span>
-              <div class="pricing-card__price">
-                <span class="mono pricing-card__amount text-profit">$29</span>
-                <span class="text-muted pricing-card__period">/per month</span>
-              </div>
-              <p class="text-muted" style="font-size:13px;">For sellers running multiple streams.</p>
+          <div class="pricing-card pricing-card--featured reveal reveal--d1">
+            <span class="pricing-badge">Most popular</span>
+            <div class="pricing-card__tier">Pro</div>
+            <div class="pricing-card__price">
+              <span class="pricing-card__amount pricing-card__amount--accent">$29</span><span class="pricing-card__period">/month</span>
             </div>
-            <a href="#" class="btn btn--primary btn--full pricing-card__cta">Start Free Trial</a>
-            <ul class="pricing-card__features">
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Unlimited live sessions</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Unlimited products</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Team support (up to 5)</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Advanced analytics</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Platform comparison charts</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>CSV export</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
+            <p class="pricing-card__desc">For active sellers running multiple streams every week who need the full picture.</p>
+            <div class="pricing-card__cta">
+              <button class="btn btn--primary btn--full" data-auth-open="signup">Start free trial</button>
+            </div>
+            <ul class="pricing-features">
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--accent" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Unlimited live sessions</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--accent" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Unlimited products</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--accent" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Team support (up to 5)</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--accent" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Advanced analytics</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--accent" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Platform comparison charts</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--accent" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>CSV export</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--accent" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Priority support</li>
             </ul>
           </div>
-
           <!-- Business -->
-          <div class="pricing-card reveal">
-            <div class="pricing-card__top">
-              <span class="pricing-card__name">Business</span>
-              <div class="pricing-card__price">
-                <span class="mono pricing-card__amount">$79</span>
-                <span class="text-muted pricing-card__period">/per month</span>
-              </div>
-              <p class="text-muted" style="font-size:13px;">For teams and scaling operations.</p>
+          <div class="pricing-card reveal reveal--d2">
+            <div class="pricing-card__tier">Business</div>
+            <div class="pricing-card__price">
+              <span class="pricing-card__amount">$79</span><span class="pricing-card__period">/month</span>
             </div>
-            <a href="#" class="btn btn--outline btn--full pricing-card__cta">Start Free Trial</a>
-            <ul class="pricing-card__features">
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Everything in Pro</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Unlimited team members</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Multi-team management</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Custom branding</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Early API access</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Dedicated onboarding</li>
+            <p class="pricing-card__desc">For teams managing multiple brands and high-volume operations across all platforms.</p>
+            <div class="pricing-card__cta">
+              <button class="btn btn--outline btn--full" data-auth-open="signup">Start free trial</button>
+            </div>
+            <ul class="pricing-features">
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--muted" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Pro</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--muted" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Unlimited team members</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--muted" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Multi-team management</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--muted" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Custom branding</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--muted" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Early API access</li>
+              <li class="pricing-feature"><span class="pricing-feature__check pricing-feature__check--muted" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>Dedicated onboarding</li>
             </ul>
           </div>
         </div>
-
-        <p class="mono text-muted reveal" style="text-align:center;font-size:12px;margin-top:2rem;">
-          All plans include a 14-day free trial on paid features · No credit card required to start
+        <p class="mono reveal" style="text-align:center;font-size:12px;color:var(--text-3);margin-top:24px">
+          14-day free trial on all paid plans · No credit card required to start
         </p>
       </div>
     </section>
 
-    <!-- ========== TESTIMONIALS ========== -->
-    <section class="testimonials-section">
+    <!-- ── TESTIMONIALS ── -->
+    <section aria-labelledby="testimonials-heading">
       <div class="container">
-        <div class="section-label reveal">What Sellers Say</div>
-        <h2 class="section-title reveal reveal--delay-1">Sellers who know their numbers <span class="text-profit">win more</span></h2>
-
+        <div class="text-center" style="margin-bottom:48px">
+          <p class="section-eyebrow reveal">Social proof</p>
+          <h2 class="section-h2 reveal reveal--d1" id="testimonials-heading">Sellers who run on numbers win more</h2>
+        </div>
         <div class="testimonials-grid">
-          <div class="testimonial-card reveal">
-            <p class="testimonial-card__quote">"I used to end every Whatnot stream guessing whether I made money. WhatDash tells me the second I close a sale. It changed how I price everything."</p>
-            <div class="testimonial-card__author">
-              <div class="testimonial-card__avatar" style="background:rgba(0,230,118,.12);color:#00E676;">JM</div>
+          <article class="testimonial-card reveal">
+            <blockquote class="testimonial-card__quote">"I used to end every Whatnot stream guessing whether I made money. WhatDash tells me the second I close a sale. It changed how I price everything."</blockquote>
+            <footer class="testimonial-card__author">
+              <div class="testimonial-card__avatar" style="background:rgba(34,197,94,.1);color:var(--color-profit)" aria-hidden="true">JM</div>
               <div>
-                <div class="testimonial-card__name">Jordan M.</div>
-                <div class="testimonial-card__meta"><span>@jordansells</span><span>·</span><span style="color:#00E676;">Whatnot</span></div>
+                <p class="testimonial-card__name">Jordan M.</p>
+                <p class="testimonial-card__handle">@jordansells · Whatnot</p>
               </div>
-            </div>
-          </div>
-          <div class="testimonial-card reveal">
-            <p class="testimonial-card__quote">"TikTok Shop moves fast. WhatDash keeps up. I know my margin on every drop before I even start talking to camera."</p>
-            <div class="testimonial-card__author">
-              <div class="testimonial-card__avatar" style="background:rgba(255,68,68,.12);color:#FF4444;">CT</div>
+            </footer>
+          </article>
+          <article class="testimonial-card reveal reveal--d1">
+            <blockquote class="testimonial-card__quote">"TikTok Shop moves fast. WhatDash keeps up. I know my margin on every drop before I even start talking to camera."</blockquote>
+            <footer class="testimonial-card__author">
+              <div class="testimonial-card__avatar" style="background:rgba(239,68,68,.1);color:var(--color-cost)" aria-hidden="true">CT</div>
               <div>
-                <div class="testimonial-card__name">Casey T.</div>
-                <div class="testimonial-card__meta"><span>@caseyfinds</span><span>·</span><span style="color:#FF4444;">TikTok Shop</span></div>
+                <p class="testimonial-card__name">Casey T.</p>
+                <p class="testimonial-card__handle">@caseyfinds · TikTok Shop</p>
               </div>
-            </div>
-          </div>
-          <div class="testimonial-card reveal">
-            <p class="testimonial-card__quote">"The inventory sync is the feature I didn't know I needed. Stock depletes as I sell. No more overselling vintage pieces I already moved."</p>
-            <div class="testimonial-card__author">
-              <div class="testimonial-card__avatar" style="background:rgba(0,230,118,.12);color:#00E676;">RK</div>
+            </footer>
+          </article>
+          <article class="testimonial-card reveal reveal--d2">
+            <blockquote class="testimonial-card__quote">"The inventory sync is the feature I didn't know I needed. Stock depletes as I sell. No more overselling vintage pieces I already moved."</blockquote>
+            <footer class="testimonial-card__author">
+              <div class="testimonial-card__avatar" style="background:rgba(34,197,94,.1);color:var(--color-profit)" aria-hidden="true">RK</div>
               <div>
-                <div class="testimonial-card__name">Riley K.</div>
-                <div class="testimonial-card__meta"><span>@rileythrift</span><span>·</span><span style="color:#00E676;">Whatnot</span></div>
+                <p class="testimonial-card__name">Riley K.</p>
+                <p class="testimonial-card__handle">@rileythrift · Whatnot</p>
               </div>
-            </div>
-          </div>
-          <div class="testimonial-card reveal">
-            <p class="testimonial-card__quote">"My team uses it during every Amazon Live. We can see who registered which sale and the total profit updates for everyone in real time."</p>
-            <div class="testimonial-card__author">
-              <div class="testimonial-card__avatar" style="background:rgba(79,195,247,.12);color:#4FC3F7;">SD</div>
+            </footer>
+          </article>
+          <article class="testimonial-card reveal">
+            <blockquote class="testimonial-card__quote">"My team uses it during every Amazon Live. We can see who registered which sale and the total profit updates for everyone in real time."</blockquote>
+            <footer class="testimonial-card__author">
+              <div class="testimonial-card__avatar" style="background:rgba(96,165,250,.1);color:var(--color-rev)" aria-hidden="true">SD</div>
               <div>
-                <div class="testimonial-card__name">Sam D.</div>
-                <div class="testimonial-card__meta"><span>@samdealz</span><span>·</span><span style="color:#4FC3F7;">Amazon Live</span></div>
+                <p class="testimonial-card__name">Sam D.</p>
+                <p class="testimonial-card__handle">@samdealz · Amazon Live</p>
               </div>
-            </div>
-          </div>
-          <div class="testimonial-card reveal">
-            <p class="testimonial-card__quote">"The overview dashboard shows me which platform is actually the most profitable. Turns out TikTok has better margins for me than Whatnot. Wild."</p>
-            <div class="testimonial-card__author">
-              <div class="testimonial-card__avatar" style="background:rgba(255,214,0,.12);color:#FFD600;">AP</div>
+            </footer>
+          </article>
+          <article class="testimonial-card reveal reveal--d1">
+            <blockquote class="testimonial-card__quote">"The overview dashboard shows me which platform is actually the most profitable. Turns out TikTok has better margins for me than Whatnot. Wild."</blockquote>
+            <footer class="testimonial-card__author">
+              <div class="testimonial-card__avatar" style="background:var(--accent-dim);color:var(--accent)" aria-hidden="true">AP</div>
               <div>
-                <div class="testimonial-card__name">Alex P.</div>
-                <div class="testimonial-card__meta"><span>@alexlivedeals</span><span>·</span><span style="color:#FFD600;">Multi-platform</span></div>
+                <p class="testimonial-card__name">Alex P.</p>
+                <p class="testimonial-card__handle">@alexlivedeals · Multi-platform</p>
               </div>
-            </div>
-          </div>
-          <div class="testimonial-card reveal">
-            <p class="testimonial-card__quote">"Setup took under 10 minutes. I added my products, started a session, and instantly had real profit numbers. No spreadsheets ever again."</p>
-            <div class="testimonial-card__author">
-              <div class="testimonial-card__avatar" style="background:rgba(255,68,68,.12);color:#FF4444;">MW</div>
+            </footer>
+          </article>
+          <article class="testimonial-card reveal reveal--d2">
+            <blockquote class="testimonial-card__quote">"Setup took under 10 minutes. I added my products, started a session, and instantly had real profit numbers. No spreadsheets ever again."</blockquote>
+            <footer class="testimonial-card__author">
+              <div class="testimonial-card__avatar" style="background:rgba(239,68,68,.1);color:var(--color-cost)" aria-hidden="true">MW</div>
               <div>
-                <div class="testimonial-card__name">Morgan W.</div>
-                <div class="testimonial-card__meta"><span>@morganwholesale</span><span>·</span><span style="color:#FF4444;">TikTok Shop</span></div>
+                <p class="testimonial-card__name">Morgan W.</p>
+                <p class="testimonial-card__handle">@morganwholesale · TikTok Shop</p>
               </div>
-            </div>
-          </div>
+            </footer>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- ========== FAQ ========== -->
-    <section class="faq-section" id="faq">
-      <div class="container faq-section__inner">
-        <div class="section-label reveal">FAQ</div>
-        <h2 class="section-title reveal reveal--delay-1">Questions answered</h2>
-
-        <div class="faq-list reveal reveal--delay-2">
-          <div class="faq-item">
-            <button class="faq-item__trigger" aria-expanded="false">
-              <span>Does WhatDash connect directly to Whatnot, TikTok Shop, or Amazon Live?</span>
-              <svg class="faq-item__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <div class="faq-item__body">
-              <p>WhatDash works alongside your live streams — you register sales as they happen during your session. We're not a direct platform integration; instead, we give you a fast, frictionless way to log sales and see your real profit in seconds. Think of it as your profit co-pilot during every stream.</p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-item__trigger" aria-expanded="false">
-              <span>How do I set up my products?</span>
-              <svg class="faq-item__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <div class="faq-item__body">
-              <p>Head to the Inventory page and add your products with their cost price, sale price, and stock level. During a live session, you select a product, enter the final sale price and quantity, and WhatDash handles the math. Setup typically takes under 10 minutes.</p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-item__trigger" aria-expanded="false">
-              <span>What does 'real-time profit' actually mean?</span>
-              <svg class="faq-item__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <div class="faq-item__body">
-              <p>The moment you register a sale during a live session, your profit, revenue, cost, and margin all update instantly — no refresh needed. This uses Supabase Realtime under the hood, so if you have a team member helping log sales, both of you see the numbers update live.</p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-item__trigger" aria-expanded="false">
-              <span>Can I use WhatDash for multiple platforms in the same session?</span>
-              <svg class="faq-item__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <div class="faq-item__body">
-              <p>Each live session is tied to one platform — Whatnot, TikTok Shop, or Amazon Live. If you stream on multiple platforms simultaneously, you can run separate sessions. The Overview dashboard then shows you comparative performance across all platforms.</p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-item__trigger" aria-expanded="false">
-              <span>What happens to my data when I end a live session?</span>
-              <svg class="faq-item__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <div class="faq-item__body">
-              <p>When you end a session, WhatDash saves a full summary including total revenue, cost, profit, margin, duration, and every individual sale. This feeds your analytics dashboard so you can compare sessions over time.</p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-item__trigger" aria-expanded="false">
-              <span>Is there a free plan? Can I try it without a credit card?</span>
-              <svg class="faq-item__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <div class="faq-item__body">
-              <p>Yes. The Free plan lets you run 1 active live session, manage up to 100 products, and access the overview dashboard — no credit card required. Upgrade to Pro or Business when you need unlimited sessions or team features.</p>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-item__trigger" aria-expanded="false">
-              <span>How does team collaboration work?</span>
-              <svg class="faq-item__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <div class="faq-item__body">
-              <p>On Pro and Business plans, you can invite team members by email. Members can log into WhatDash and register sales during a live session. All sales and profit updates are synced in real time for every team member in the session.</p>
-            </div>
-          </div>
-          <div class="faq-item" style="border-bottom:none;">
-            <button class="faq-item__trigger" aria-expanded="false">
-              <span>Is my data secure?</span>
-              <svg class="faq-item__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <div class="faq-item__body">
-              <p>WhatDash uses Supabase with Row Level Security (RLS), meaning every user can only access their own data or teams they belong to. There is zero cross-tenant access. Stripe handles all billing securely — we never store card details.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== FINAL CTA ========== -->
-    <section class="cta-section">
+    <!-- ── FAQ ── -->
+    <section class="section--alt" id="faq" aria-labelledby="faq-heading">
       <div class="container">
-        <div class="cta-box reveal">
-          <div class="cta-box__glow-line"></div>
-          <div class="cta-box__badge mono text-profit">Start Today — Free</div>
-          <h2 class="cta-box__headline">Stop guessing.<br /><span class="text-profit">Know your profit.</span></h2>
-          <p class="cta-box__sub">Join sellers who use WhatDash to run smarter live streams. Set up in minutes, track profit from your very first sale.</p>
-          <div class="cta-box__actions">
-            <a href="#" class="btn btn--primary btn--lg">
-              Start Free Trial
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-            <a href="#" class="cta-box__login-link">Already have an account? Log in</a>
+        <div class="text-center" style="margin-bottom:48px">
+          <p class="section-eyebrow reveal">FAQ</p>
+          <h2 class="section-h2 reveal reveal--d1" id="faq-heading">Questions answered</h2>
+        </div>
+        <!-- FIX #4: removed invalid role="list"/"listitem" from accordion — FAQ items are not a list,
+             they are an accordion widget; the natural div semantics are correct here -->
+        <div class="faq-list reveal reveal--d2">
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-body-1">
+              <span>Does WhatDash connect directly to Whatnot, TikTok Shop, or Amazon Live?</span>
+              <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <div class="faq-body" id="faq-body-1" role="region" aria-labelledby="faq-trigger-1"><div class="faq-body__inner"><p>WhatDash works alongside your live streams — you register sales as they happen during your session. We're not a direct platform integration; instead, we give you a fast, frictionless way to log sales and see your real profit in seconds. Think of it as your profit co-pilot during every stream.</p></div></div>
           </div>
-          <p class="mono text-muted cta-box__disclaimer">No credit card · Free plan available · Cancel any time</p>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-body-2">
+              <span>How do I set up my products?</span>
+              <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <div class="faq-body" id="faq-body-2" role="region" aria-labelledby="faq-trigger-2"><div class="faq-body__inner"><p>Head to the Inventory page and add your products with their cost price, sale price, and stock level. During a live session, you select a product, enter the final sale price and quantity, and WhatDash handles the math. Setup typically takes under 10 minutes.</p></div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-body-3">
+              <span>What does "real-time profit" actually mean?</span>
+              <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <div class="faq-body" id="faq-body-3" role="region" aria-labelledby="faq-trigger-3"><div class="faq-body__inner"><p>The moment you register a sale during a live session, your profit, revenue, cost, and margin all update instantly — no refresh needed. This uses Supabase Realtime under the hood, so if you have a team member helping log sales, both of you see the numbers update live.</p></div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-body-4">
+              <span>Can I use WhatDash for multiple platforms in the same session?</span>
+              <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <div class="faq-body" id="faq-body-4" role="region" aria-labelledby="faq-trigger-4"><div class="faq-body__inner"><p>Each live session is tied to one platform — Whatnot, TikTok Shop, or Amazon Live. If you stream on multiple platforms simultaneously, you can run separate sessions. The Overview dashboard then shows you comparative performance across all platforms.</p></div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-body-5">
+              <span>Is there a free plan? Can I try without a credit card?</span>
+              <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <div class="faq-body" id="faq-body-5" role="region" aria-labelledby="faq-trigger-5"><div class="faq-body__inner"><p>Yes. The Free plan lets you run 1 active live session, manage up to 100 products, and access the overview dashboard — no credit card required. Upgrade to Pro or Business when you need unlimited sessions or team features.</p></div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-body-6">
+              <span>Is my data secure?</span>
+              <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <div class="faq-body" id="faq-body-6" role="region" aria-labelledby="faq-trigger-6"><div class="faq-body__inner"><p>WhatDash uses Supabase with Row Level Security (RLS), meaning every user can only access their own data or teams they belong to. There is zero cross-tenant access. Stripe handles all billing — we never store card details.</p></div></div>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- ── CTA ── -->
+    <section class="cta-section" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="cta-inner">
+          <!-- FIX #5: removed inline style override; .cta-eyebrow class handles centering via CSS -->
+          <p class="section-eyebrow cta-eyebrow reveal">Start today</p>
+          <h2 class="cta-h2 reveal reveal--d1" id="cta-heading">
+            Stop guessing.<br>
+            <em class="cta-h2__accent">Know your profit.</em>
+          </h2>
+          <p class="cta-sub reveal reveal--d2">Join sellers who run smarter live streams with WhatDash. Set up in minutes, track from your very first sale.</p>
+          <div class="cta-actions reveal reveal--d3">
+            <button class="btn btn--primary btn--lg" data-auth-open="signup">
+              Start free — no card needed
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </div>
+          <p class="cta-disclaimer reveal reveal--d4">
+            Free plan always available<span class="cta-disclaimer__sep" aria-hidden="true">·</span>Cancel any time<span class="cta-disclaimer__sep" aria-hidden="true">·</span>5-min setup
+          </p>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- ========== FOOTER ========== -->
-  <footer class="footer">
+  <!-- ── FOOTER ── -->
+  <footer class="footer" role="contentinfo">
     <div class="container">
       <div class="footer__grid">
-        <div class="footer__brand">
-          <div class="footer__logo">
-            <div class="navbar__logo-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <div>
+          <div class="footer__brand-logo">
+            <div class="footer__logo-mark" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+              </svg>
             </div>
-            <span>What<span class="text-profit">Dash</span></span>
+            WhatDash
           </div>
           <p class="footer__tagline">Real-time profit tracking for live sellers on Whatnot, TikTok Shop, and Amazon Live.</p>
         </div>
-        <div class="footer__links-group">
-          <p class="footer__links-title mono">Product</p>
-          <ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Changelog</a></li><li><a href="#">Roadmap</a></li></ul>
+        <div>
+          <p class="footer__col-title">Product</p>
+          <ul class="footer__col-links">
+            <li><a href="#features" class="footer__link">Features</a></li>
+            <li><a href="#pricing"  class="footer__link">Pricing</a></li>
+            <li><a href="#"         class="footer__link">Changelog</a></li>
+            <li><a href="#"         class="footer__link">Roadmap</a></li>
+          </ul>
         </div>
-        <div class="footer__links-group">
-          <p class="footer__links-title mono">Resources</p>
-          <ul><li><a href="#">Documentation</a></li><li><a href="#">API Reference</a></li><li><a href="#">Status</a></li></ul>
+        <div>
+          <p class="footer__col-title">Resources</p>
+          <ul class="footer__col-links">
+            <li><a href="#" class="footer__link">Documentation</a></li>
+            <li><a href="#" class="footer__link">Status</a></li>
+            <li><a href="#" class="footer__link">Support</a></li>
+          </ul>
         </div>
-        <div class="footer__links-group">
-          <p class="footer__links-title mono">Company</p>
-          <ul><li><a href="#">About</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul>
+        <div>
+          <p class="footer__col-title">Company</p>
+          <ul class="footer__col-links">
+            <li><a href="#" class="footer__link">About</a></li>
+            <li><a href="#" class="footer__link">Privacy</a></li>
+            <li><a href="#" class="footer__link">Terms</a></li>
+          </ul>
         </div>
       </div>
       <div class="footer__bottom">
-        <span class="mono">© 2025 WhatDash. All rights reserved.</span>
+        <span id="footerYear" class="mono">© 2026 WhatDash. All rights reserved.</span>
         <span class="mono">Built for live sellers who mean business.</span>
       </div>
     </div>
   </footer>
+</div><!-- /landingPage -->
 
-  <script src="script.js"></script>
+<!-- ================================================================
+     AUTH MODAL
+     ================================================================ -->
+<div class="auth-overlay" id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <div class="auth-modal">
+    <div class="auth-modal__header">
+      <div class="auth-logo" aria-hidden="true">
+        <div class="auth-logo-mark">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" aria-hidden="true" focusable="false">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+        </div>
+        WhatDash
+      </div>
+      <button class="auth-close" id="authClose" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <!-- Tab switcher -->
+    <div class="auth-tabs" role="tablist" aria-label="Authentication options">
+      <button class="auth-tab auth-tab--active" id="tabLogin" role="tab" aria-selected="true" aria-controls="loginForm">Log in</button>
+      <button class="auth-tab" id="tabSignup" role="tab" aria-selected="false" aria-controls="signupForm">Sign up</button>
+    </div>
+    <h2 class="auth-modal__title" id="authTitle">Welcome back</h2>
+    <p class="auth-modal__sub" id="authSubtitle">Enter your details to continue.</p>
+    <!-- Login form -->
+    <div id="loginForm" role="tabpanel" aria-labelledby="tabLogin">
+      <div class="auth-error" id="loginError" role="alert" aria-live="assertive"></div>
+      <div class="auth-form">
+        <div class="auth-field">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="email" inputmode="email" />
+        </div>
+        <div class="auth-field">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <button class="btn btn--primary btn--full auth-form__submit" id="loginSubmit" type="button">Log in</button>
+      </div>
+      <p class="auth-switch">No account? <a href="#" id="switchToSignup">Create one free</a></p>
+    </div>
+    <!-- Signup form -->
+    <div id="signupForm" hidden role="tabpanel" aria-labelledby="tabSignup">
+      <div class="auth-error" id="signupError" role="alert" aria-live="assertive"></div>
+      <div class="auth-form">
+        <div class="auth-field">
+          <label for="signupName">Name</label>
+          <input type="text" id="signupName" name="name" placeholder="Your name" autocomplete="name" />
+        </div>
+        <div class="auth-field">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" name="email" placeholder="you@example.com" autocomplete="email" inputmode="email" />
+        </div>
+        <div class="auth-field">
+          <label for="signupPassword">Password <span style="font-weight:400;color:var(--text-3)">(min. 8 characters)</span></label>
+          <input type="password" id="signupPassword" name="password" placeholder="••••••••" autocomplete="new-password" />
+        </div>
+        <button class="btn btn--primary btn--full auth-form__submit" id="signupSubmit" type="button">Create account</button>
+      </div>
+      <p class="auth-switch">Have an account? <a href="#" id="switchToLogin">Log in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     DASHBOARD PAGE
+     ================================================================ -->
+<div class="page-dashboard" id="dashboardPage" role="main" aria-label="WhatDash Dashboard">
+  <!-- Dashboard nav -->
+  <header class="dash-nav" role="banner">
+    <div class="container dash-nav__inner">
+      <a href="#" class="dash-nav__logo" id="dashLogoHome" aria-label="WhatDash — back to home">
+        <div class="dash-nav__logo-mark" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" aria-hidden="true" focusable="false">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+        </div>
+        WhatDash
+      </a>
+      <nav class="dash-nav__links" aria-label="Dashboard navigation">
+        <a href="#" class="dash-nav__link dash-nav__link--active" aria-current="page">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Overview
+        </a>
+        <a href="#" class="dash-nav__link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Live
+        </a>
+        <a href="#" class="dash-nav__link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Inventory
+        </a>
+        <a href="#" class="dash-nav__link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Analytics
+        </a>
+      </nav>
+      <div class="dash-nav__right">
+        <button class="theme-toggle" data-action="toggle-theme" aria-label="Toggle colour theme">
+          <svg data-theme-sun width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg data-theme-moon width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <div class="dash-nav__avatar" id="dashAvatar" aria-hidden="true">YN</div>
+        <span class="dash-nav__username" id="dashUsername"></span>
+        <button class="dash-logout" id="dashLogout">Log out</button>
+      </div>
+    </div>
+  </header>
+  <!-- Dashboard content -->
+  <div class="dash-main">
+    <div class="container">
+      <div class="dash-main__header">
+        <div>
+          <h1 class="dash-main__title">Overview</h1>
+          <p class="dash-main__subtitle mono" id="dashDate">Last 30 days</p>
+        </div>
+        <div class="dash-main__actions">
+          <button class="btn btn--outline btn--sm">Export CSV</button>
+          <button class="btn btn--primary btn--sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+            Start session
+          </button>
+        </div>
+      </div>
+      <!-- Live session banner -->
+      <div class="live-banner" role="status" aria-label="Active live session">
+        <div class="live-banner__left">
+          <div class="live-banner__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div>
+            <div class="live-banner__title">
+              Whatnot Live Session
+              <span class="live-indicator"><span class="live-indicator__dot" aria-hidden="true"></span><span>Live</span></span>
+            </div>
+            <p class="live-banner__meta">Started 47 minutes ago · June 16, 2026</p>
+          </div>
+        </div>
+        <div class="live-banner__stats">
+          <div class="live-stat">
+            <div class="live-stat__label">Profit</div>
+            <div class="live-stat__value" id="liveProfit">$0.00</div>
+          </div>
+          <div class="live-stat">
+            <div class="live-stat__label">Revenue</div>
+            <div class="live-stat__value" style="color:var(--color-rev)">$515.00</div>
+          </div>
+          <div class="live-stat">
+            <div class="live-stat__label">Sales</div>
+            <div class="live-stat__value" style="color:var(--text)">4</div>
+          </div>
+        </div>
+      </div>
+      <!-- KPI row -->
+      <div class="dash-kpi-row" role="list" aria-label="Key performance indicators">
+        <div class="dash-kpi dash-kpi--profit" role="listitem">
+          <div class="dash-kpi__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div class="dash-kpi__label">Net Profit</div>
+          <div class="dash-kpi__value">$12,847</div>
+          <div class="dash-kpi__trend dash-kpi__trend--up" aria-label="Up 18.4% versus last 30 days">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+            +18.4% <span class="dash-kpi__trend-meta">vs last 30d</span>
+          </div>
+        </div>
+        <div class="dash-kpi dash-kpi--rev" role="listitem">
+          <div class="dash-kpi__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="dash-kpi__label">Total Revenue</div>
+          <div class="dash-kpi__value">$31,290</div>
+          <div class="dash-kpi__trend dash-kpi__trend--up" aria-label="Up 12.1% versus last 30 days">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+            +12.1% <span class="dash-kpi__trend-meta">vs last 30d</span>
+          </div>
+        </div>
+        <div class="dash-kpi dash-kpi--margin" role="listitem">
+          <div class="dash-kpi__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="dash-kpi__label">Avg Margin</div>
+          <div class="dash-kpi__value">41.1%</div>
+          <div class="dash-kpi__trend dash-kpi__trend--down" aria-label="Down 2.3% versus last 30 days">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            -2.3% <span class="dash-kpi__trend-meta">vs last 30d</span>
+          </div>
+        </div>
+        <div class="dash-kpi dash-kpi--sessions" role="listitem">
+          <div class="dash-kpi__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="dash-kpi__label">Live Sessions</div>
+          <div class="dash-kpi__value">24</div>
+          <div class="dash-kpi__trend dash-kpi__trend--up" aria-label="6 more than last month">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+            +6 <span class="dash-kpi__trend-meta">this month</span>
+          </div>
+        </div>
+      </div>
+      <!-- Two-column layout -->
+      <div class="dash-two-col">
+        <!-- Sessions table -->
+        <div class="card">
+          <div class="card__header">
+            <h2 class="card__title">Recent sessions</h2>
+            <a href="#" class="card__action">View all →</a>
+          </div>
+          <table class="sessions-table" aria-label="Recent live sessions">
+            <thead>
+              <tr>
+                <th scope="col">Platform</th>
+                <th scope="col">Date</th>
+                <th scope="col">Items</th>
+                <th scope="col">Revenue</th>
+                <th scope="col">Profit</th>
+                <th scope="col">Margin</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="platform-tag platform-tag--wn">Whatnot</span></td>
+                <td>Jun 14</td>
+                <td class="td-mono">18</td>
+                <td class="td-rev">$3,200</td>
+                <td class="td-profit">$1,350</td>
+                <td class="td-margin">42.2%</td>
+              </tr>
+              <tr>
+                <td><span class="platform-tag platform-tag--tt">TikTok</span></td>
+                <td>Jun 12</td>
+                <td class="td-mono">14</td>
+                <td class="td-rev">$2,870</td>
+                <td class="td-profit">$1,180</td>
+                <td class="td-margin">41.1%</td>
+              </tr>
+              <tr>
+                <td><span class="platform-tag platform-tag--al">Amazon</span></td>
+                <td>Jun 10</td>
+                <td class="td-mono">9</td>
+                <td class="td-rev">$1,940</td>
+                <td class="td-profit">$740</td>
+                <td class="td-margin">38.1%</td>
+              </tr>
+              <tr>
+                <td><span class="platform-tag platform-tag--wn">Whatnot</span></td>
+                <td>Jun 8</td>
+                <td class="td-mono">22</td>
+                <td class="td-rev">$4,100</td>
+                <td class="td-profit">$1,760</td>
+                <td class="td-margin">42.9%</td>
+              </tr>
+              <tr>
+                <td><span class="platform-tag platform-tag--tt">TikTok</span></td>
+                <td>Jun 6</td>
+                <td class="td-mono">11</td>
+                <td class="td-rev">$2,150</td>
+                <td class="td-profit">$880</td>
+                <td class="td-margin">40.9%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Platform breakdown -->
+        <div class="card">
+          <div class="card__header">
+            <h2 class="card__title">Platform breakdown</h2>
+          </div>
+          <div class="platform-list" role="list" aria-label="Profit by platform">
+            <div class="platform-item" role="listitem">
+              <div class="platform-item__left">
+                <span class="platform-item__dot" style="background:#22C55E" aria-hidden="true"></span>
+                <div>
+                  <div class="platform-item__name">Whatnot</div>
+                  <div class="platform-item__sub">14 sessions</div>
+                </div>
+              </div>
+              <div class="platform-item__right">
+                <div class="platform-item__value">$5,820</div>
+                <div class="platform-item__pct">45.3% of profit</div>
+              </div>
+            </div>
+            <div class="platform-item" role="listitem">
+              <div class="platform-item__left">
+                <span class="platform-item__dot" style="background:#EF4444" aria-hidden="true"></span>
+                <div>
+                  <div class="platform-item__name">TikTok Shop</div>
+                  <div class="platform-item__sub">7 sessions</div>
+                </div>
+              </div>
+              <div class="platform-item__right">
+                <div class="platform-item__value">$4,310</div>
+                <div class="platform-item__pct">33.5% of profit</div>
+              </div>
+            </div>
+            <div class="platform-item" role="listitem">
+              <div class="platform-item__left">
+                <span class="platform-item__dot" style="background:#60A5FA" aria-hidden="true"></span>
+                <div>
+                  <div class="platform-item__name">Amazon Live</div>
+                  <div class="platform-item__sub">3 sessions</div>
+                </div>
+              </div>
+              <div class="platform-item__right">
+                <div class="platform-item__value">$2,717</div>
+                <div class="platform-item__pct">21.2% of profit</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /dash-two-col -->
+    </div>
+  </div>
+</div><!-- /dashboardPage -->
+
+<!-- FIX #2: was "main.js", corrected to "script.js" -->
+<script src="script.js"></script>
 </body>
 </html>
