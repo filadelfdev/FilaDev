@@ -316,12 +316,98 @@ function initFaq() {
 }
 
 /* ================================================================
+   AUTH SERVICE
+   ------------------------------------------------------------------
+   Adapter layer so the UI never talks to storage directly.
+   Today `LocalAdapter` simulates an account store in localStorage —
+   this is a PROTOTYPE ONLY, not a real authentication backend.
+   When the real API ships, swap `activeAdapter` for an adapter that
+   calls it; `AuthService`'s public interface (async login/signup/
+   getSession/logout) does not need to change.
+   ================================================================ */
+const AuthService = (() => {
+  const STORAGE_KEY_USERS   = 'wd_users_v3';
+  const STORAGE_KEY_SESSION = 'wd_session_v3';
+
+  /** Non-reversible local digest so we never keep the raw password
+   *  around, even in this prototype. NOT a substitute for a real
+   *  server-side password hash (e.g. bcrypt/argon2) — replace this
+   *  whole adapter once a real backend exists. */
+  async function digest(text) {
+    const enc = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  const LocalAdapter = {
+    async signup({ name, email, password }) {
+      const users = readUsers();
+      if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+        throw new AuthError('An account with this email already exists. Try logging in.');
+      }
+      const passwordHash = await digest(password);
+      users.push({ name, email, passwordHash });
+      writeUsers(users);
+      const session = { name, email };
+      writeSession(session);
+      return session;
+    },
+
+    async login({ email, password }) {
+      const users = readUsers();
+      const passwordHash = await digest(password);
+      const user = users.find(u =>
+        u.email.toLowerCase() === email.toLowerCase() && u.passwordHash === passwordHash
+      );
+      if (!user) throw new AuthError('Incorrect email or password. Please try again.');
+      const session = { name: user.name, email: user.email };
+      writeSession(session);
+      return session;
+    },
+
+    async getSession() {
+      return readSession();
+    },
+
+    async logout() {
+      try { localStorage.removeItem(STORAGE_KEY_SESSION); } catch (_) {}
+    }
+  };
+
+  function readUsers() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]'); }
+    catch (_) { return []; }
+  }
+  function writeUsers(users) {
+    try { localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users)); }
+    catch (err) { console.warn('WhatDash: could not persist users', err); }
+  }
+  function writeSession(session) {
+    try { localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(session)); }
+    catch (err) { console.warn('WhatDash: could not persist session', err); }
+  }
+  function readSession() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY_SESSION)); }
+    catch (_) { return null; }
+  }
+
+  // Swap this single binding when a real backend adapter is ready.
+  const activeAdapter = LocalAdapter;
+
+  return {
+    signup:     (data) => activeAdapter.signup(data),
+    login:      (data) => activeAdapter.login(data),
+    getSession: ()     => activeAdapter.getSession(),
+    logout:     ()     => activeAdapter.logout(),
+  };
+})();
+
+class AuthError extends Error {}
+
+/* ================================================================
    AUTH MODAL
    ================================================================ */
 const Auth = (() => {
-  const STORAGE_KEY_USERS   = 'wd_users_v2';
-  const STORAGE_KEY_SESSION = 'wd_session_v2';
-
   let overlay, modal;
 
   function open(mode = 'signup') {
@@ -384,67 +470,55 @@ const Auth = (() => {
     $$('.auth-error').forEach(el => el.classList.remove('auth-error--visible'));
   }
 
-  function getUsers() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]'); }
-    catch (_) { return []; }
-  }
-  function saveUsers(users) {
-    try { localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users)); }
-    catch (_) {}
-  }
-  function saveSession(user) {
-    try { localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(user)); }
-    catch (_) {}
-  }
-  function getSession() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY_SESSION)); }
-    catch (_) { return null; }
-  }
-  function clearSession() {
-    try { localStorage.removeItem(STORAGE_KEY_SESSION); }
-    catch (_) {}
+  function setSubmitting(button, isSubmitting) {
+    if (!button) return;
+    button.disabled = isSubmitting;
+    button.classList.toggle('btn--loading', isSubmitting);
   }
 
-  function handleSignup() {
-    const name  = $('#signupName')?.value.trim()  || '';
-    const email = $('#signupEmail')?.value.trim() || '';
-    const pass  = $('#signupPassword')?.value     || '';
+  async function handleSignup() {
+    const name     = $('#signupName')?.value.trim()  || '';
+    const email    = $('#signupEmail')?.value.trim() || '';
+    const password = $('#signupPassword')?.value     || '';
+    const submitBtn = $('#signupSubmit');
 
     if (!name)                   return showError('signupError', 'Please enter your name.');
     if (!email.includes('@'))    return showError('signupError', 'Please enter a valid email address.');
-    if (pass.length < 8)         return showError('signupError', 'Password must be at least 8 characters.');
+    if (password.length < 8)     return showError('signupError', 'Password must be at least 8 characters.');
 
-    const users = getUsers();
-    if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
-      return showError('signupError', 'An account with this email already exists. Try logging in.');
+    setSubmitting(submitBtn, true);
+    try {
+      const session = await AuthService.signup({ name, email, password });
+      close();
+      Dashboard.mount(session);
+    } catch (err) {
+      showError('signupError', err instanceof AuthError ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(submitBtn, false);
     }
-
-    const user = { name, email, pass };
-    users.push(user);
-    saveUsers(users);
-    saveSession({ name, email });
-    close();
-    Dashboard.mount({ name, email });
   }
 
-  function handleLogin() {
-    const email = $('#loginEmail')?.value.trim() || '';
-    const pass  = $('#loginPassword')?.value     || '';
+  async function handleLogin() {
+    const email    = $('#loginEmail')?.value.trim() || '';
+    const password = $('#loginPassword')?.value     || '';
+    const submitBtn = $('#loginSubmit');
 
-    if (!email) return showError('loginError', 'Please enter your email address.');
-    if (!pass)  return showError('loginError', 'Please enter your password.');
+    if (!email)    return showError('loginError', 'Please enter your email address.');
+    if (!password) return showError('loginError', 'Please enter your password.');
 
-    const users = getUsers();
-    const user  = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.pass === pass);
-
-    if (!user) return showError('loginError', 'Incorrect email or password. Please try again.');
-
-    saveSession({ name: user.name, email: user.email });
-    close();
-    Dashboard.mount(user);
+    setSubmitting(submitBtn, true);
+    try {
+      const session = await AuthService.login({ email, password });
+      close();
+      Dashboard.mount(session);
+    } catch (err) {
+      showError('loginError', err instanceof AuthError ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(submitBtn, false);
+    }
   }
 
-  function init() {
+  async function init() {
     overlay = $('#authOverlay');
     modal   = overlay?.querySelector('.auth-modal');
     if (!overlay) return;
@@ -486,13 +560,13 @@ const Auth = (() => {
     });
 
     // Restore session
-    const session = getSession();
+    const session = await AuthService.getSession();
     if (session) {
       Dashboard.mount(session);
     }
   }
 
-  return { init, open, close, clearSession };
+  return { init, open, close, clearSession: () => AuthService.logout() };
 })();
 
 /* ================================================================
@@ -562,6 +636,47 @@ const Dashboard = (() => {
 })();
 
 /* ================================================================
+   FEATURE TABS (categorized features with live mockups)
+   ================================================================ */
+const FeatureTabs = (() => {
+  function activate(tabs, panels, target) {
+    tabs.forEach(tab => {
+      const isActive = tab === target;
+      tab.setAttribute('aria-selected', String(isActive));
+      tab.tabIndex = isActive ? 0 : -1;
+    });
+    panels.forEach(panel => {
+      const isActive = panel.id === target.getAttribute('aria-controls');
+      panel.hidden = !isActive;
+      panel.classList.toggle('ftab-panel--active', isActive);
+    });
+  }
+
+  function init() {
+    const nav = $('.ftabs__nav');
+    if (!nav) return;
+
+    const tabs = $$('.ftab', nav);
+    const panels = $$('.ftab-panel');
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => activate(tabs, panels, tab));
+
+      tab.addEventListener('keydown', (e) => {
+        const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!dir) return;
+        e.preventDefault();
+        const next = tabs[(i + dir + tabs.length) % tabs.length];
+        next.focus();
+        activate(tabs, panels, next);
+      });
+    });
+  }
+
+  return { init };
+})();
+
+/* ================================================================
    FOOTER YEAR
    ================================================================ */
 function initFooterYear() {
@@ -580,6 +695,7 @@ function init() {
   initPlatformBars();
   initPhoneProfitCounter();
   Terminal.init();
+  FeatureTabs.init();
   initFaq();
   Auth.init();
   Dashboard.init();

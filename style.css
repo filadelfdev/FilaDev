@@ -238,6 +238,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .btn--sm { padding: 7px 15px; font-size: 13px; }
 .btn--full { width: 100%; justify-content: center; }
 
+.btn--loading {
+  opacity: .6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .btn svg { flex-shrink: 0; }
 
 /* ----------------------------------------------------------------
@@ -880,53 +886,147 @@ section { padding: 100px 0; }
 }
 
 /* ----------------------------------------------------------------
-   11. FEATURE CARDS
+   11. FEATURE TABS (categorized, with real UI mockups)
    ---------------------------------------------------------------- */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border);
+.ftabs { width: 100%; }
+
+.ftabs__nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.ftab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  padding: 9px 18px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  transition: color var(--t-base), border-color var(--t-base), background var(--t-base);
+}
+.ftab svg { opacity: .6; transition: opacity var(--t-base); }
+.ftab:hover { color: var(--text); border-color: var(--glass-border); }
+.ftab[aria-selected="true"] {
+  color: #000;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.ftab[aria-selected="true"] svg { opacity: 1; }
+
+.ftabs__panels {
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
+  background: var(--bg-2);
+  padding: 40px;
+  position: relative;
   overflow: hidden;
 }
 
-.feature-card {
-  background: var(--bg);
-  padding: 36px 32px;
-  transition: background var(--t-md) var(--ease-out);
-  position: relative;
-}
-.feature-card:hover { background: var(--bg-2); }
-
-.feature-card__icon {
-  width: 44px; height: 44px;
-  background: var(--accent-dim);
-  border: 1px solid var(--accent-border);
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 20px;
-  color: var(--accent);
-  transition: background var(--t-md), color var(--t-md), border-color var(--t-md);
-}
-.feature-card:hover .feature-card__icon {
-  background: var(--accent);
-  color: #000;
-  border-color: var(--accent);
+.ftab-panel { display: none; }
+.ftab-panel--active {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  gap: 40px;
+  align-items: center;
 }
 
-.feature-card__title {
-  font-size: 16px;
-  font-weight: 700;
+.ftab-panel__copy { min-width: 0; }
+
+.ftab-panel__title {
+  font-size: 22px;
+  font-weight: 800;
   letter-spacing: -.03em;
-  margin-bottom: 8px;
+  line-height: 1.25;
+  margin-bottom: 12px;
 }
 
-.feature-card__desc {
+.ftab-panel__desc {
   font-size: 14px;
   color: var(--text-2);
-  line-height: 1.6;
+  line-height: 1.65;
+}
+
+.ftab-panel__mocks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.fmock {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Signature element: a thin accent light sweeps the border of the
+   active panel's mock cards, echoing the "live" metaphor of the product. */
+.ftab-panel--active .fmock::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg, transparent 0%, var(--accent) 50%, transparent 100%);
+  background-size: 220% 100%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: .55;
+  animation: fmock-sweep 2.6s var(--ease-out) 1;
+  pointer-events: none;
+}
+
+@keyframes fmock-sweep {
+  0%   { background-position: 220% 0; opacity: 0; }
+  15%  { opacity: .55; }
+  100% { background-position: -20% 0; opacity: 0; }
+}
+
+.fmock__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+
+.sale-row--mock,
+.pbar--mock { margin: 0; }
+
+.phone-kpi--mock {
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+
+.fmock__pills {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fmock__export { pointer-events: none; }
+
+@media (max-width: 1024px) {
+  .ftab-panel--active { grid-template-columns: 1fr; gap: 24px; }
+  .ftabs__panels { padding: 28px; }
+}
+
+@media (max-width: 768px) {
+  .ftab-panel__mocks { grid-template-columns: 1fr; }
+  .ftab { font-size: 12px; padding: 8px 14px; }
 }
 
 /* ----------------------------------------------------------------
@@ -2159,7 +2259,6 @@ section { padding: 100px 0; }
    22. RESPONSIVE — 1024px
    ---------------------------------------------------------------- */
 @media (max-width: 1024px) {
-  .features-grid { grid-template-columns: 1fr 1fr; }
   .pricing-grid  { grid-template-columns: 1fr; }
   .testimonials-grid { grid-template-columns: 1fr 1fr; }
   .footer__grid  { grid-template-columns: 1fr 1fr; gap: 28px; }
@@ -2196,7 +2295,6 @@ section { padding: 100px 0; }
   .navbar__actions { display: none; }
   .hamburger { display: flex; }
 
-  .features-grid { grid-template-columns: 1fr; }
   .preview-body  { grid-template-columns: 1fr; }
 
   .testimonials-grid { grid-template-columns: 1fr; }

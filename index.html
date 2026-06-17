@@ -14,7 +14,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <!-- FIX #1: was "styles.css", corrected to "style.css" -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -134,7 +133,6 @@
                   </div>
                   <div class="phone-ui__profit">
                     <div class="phone-ui__profit-label">Net Profit · Session</div>
-                    <!-- FIX #3: profit value starts at $0.00, animated to $4,288.00 (8940-4652) matching the pills -->
                     <div class="phone-ui__profit-value" id="phoneProfit">$0.00</div>
                     <div class="phone-ui__profit-pills">
                       <span class="phone-pill phone-pill--rev">Rev $8,940</span>
@@ -196,48 +194,135 @@
           <h2 class="section-h2 reveal reveal--d1" id="features-heading">Built for the speed of live selling</h2>
           <p class="section-desc reveal reveal--d2">Every feature is designed to work during a live session, not after. Your numbers update as you sell.</p>
         </div>
-        <div class="features-grid reveal reveal--d1">
-          <div class="feature-card">
-            <div class="feature-card__icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            </div>
-            <h3 class="feature-card__title">Profit in real time</h3>
-            <p class="feature-card__desc">Register a sale and instantly see your net profit update. No spreadsheet, no delay. Built on Supabase Realtime.</p>
+        <div class="ftabs reveal reveal--d1">
+          <div class="ftabs__nav" role="tablist" aria-label="Feature categories">
+            <button class="ftab" role="tab" aria-selected="true" aria-controls="ftab-panel-live" id="ftab-live" data-ftab="live">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Live tracking
+            </button>
+            <button class="ftab" role="tab" aria-selected="false" aria-controls="ftab-panel-inventory" id="ftab-inventory" data-ftab="inventory">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              Inventory
+            </button>
+            <button class="ftab" role="tab" aria-selected="false" aria-controls="ftab-panel-team" id="ftab-team" data-ftab="team">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Team
+            </button>
+            <button class="ftab" role="tab" aria-selected="false" aria-controls="ftab-panel-analytics" id="ftab-analytics" data-ftab="analytics">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Analytics
+            </button>
           </div>
-          <div class="feature-card">
-            <div class="feature-card__icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+
+          <div class="ftabs__panels">
+            <!-- LIVE TRACKING -->
+            <div class="ftab-panel ftab-panel--active" id="ftab-panel-live" role="tabpanel" aria-labelledby="ftab-live">
+              <div class="ftab-panel__copy">
+                <h3 class="ftab-panel__title">Profit updates the second you sell</h3>
+                <p class="ftab-panel__desc">Register a sale and your net profit, revenue, and margin update instantly — no spreadsheet, no delay, no end-of-stream surprise.</p>
+              </div>
+              <div class="ftab-panel__mocks">
+                <div class="fmock">
+                  <div class="fmock__label">Sale registered</div>
+                  <div class="sale-row sale-row--mock">
+                    <div class="sale-row__left"><span class="sale-row__dot"></span><span class="sale-row__name">Nike SB Dunk Low</span></div>
+                    <span class="sale-row__profit">+$170</span>
+                  </div>
+                </div>
+                <div class="fmock">
+                  <div class="fmock__label">Session profit</div>
+                  <div class="fmock__pills">
+                    <span class="phone-pill phone-pill--rev">Rev $8,940</span>
+                    <span class="phone-pill phone-pill--cost">Cost $4,652</span>
+                  </div>
+                </div>
+                <div class="fmock">
+                  <div class="fmock__label">Live margin</div>
+                  <div class="phone-kpi phone-kpi--mock"><div class="phone-kpi__label">Margin</div><div class="phone-kpi__value phone-kpi__value--accent">48.0%</div></div>
+                </div>
+              </div>
             </div>
-            <h3 class="feature-card__title">Smart inventory sync</h3>
-            <p class="feature-card__desc">Stock depletes the moment you sell. No more overselling pieces you already moved in the first hour.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-card__icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+
+            <!-- INVENTORY -->
+            <div class="ftab-panel" id="ftab-panel-inventory" role="tabpanel" aria-labelledby="ftab-inventory" hidden>
+              <div class="ftab-panel__copy">
+                <h3 class="ftab-panel__title">Stock depletes the moment you sell</h3>
+                <p class="ftab-panel__desc">No more overselling pieces you already moved in the first hour. Every sale during a session updates your live count automatically.</p>
+              </div>
+              <div class="ftab-panel__mocks">
+                <div class="fmock">
+                  <div class="fmock__label">Vintage Coach Bag</div>
+                  <div class="pbar pbar--mock">
+                    <div class="pbar__header"><span class="pbar__name">In stock</span><span class="pbar__value">3 left</span></div>
+                    <div class="pbar__track"><div class="pbar__fill" style="background:#EF4444;width:18%"></div></div>
+                  </div>
+                </div>
+                <div class="fmock">
+                  <div class="fmock__label">Y2K Levi Jeans</div>
+                  <div class="pbar pbar--mock">
+                    <div class="pbar__header"><span class="pbar__name">In stock</span><span class="pbar__value">11 left</span></div>
+                    <div class="pbar__track"><div class="pbar__fill" style="background:#22C55E;width:55%"></div></div>
+                  </div>
+                </div>
+                <div class="fmock">
+                  <div class="fmock__label">Sold this session</div>
+                  <div class="phone-kpi phone-kpi--mock"><div class="phone-kpi__label">Items moved</div><div class="phone-kpi__value">24</div></div>
+                </div>
+              </div>
             </div>
-            <h3 class="feature-card__title">Multi-platform overview</h3>
-            <p class="feature-card__desc">Compare Whatnot, TikTok Shop, and Amazon Live side by side. See which platform actually earns you the most.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-card__icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+
+            <!-- TEAM -->
+            <div class="ftab-panel" id="ftab-panel-team" role="tabpanel" aria-labelledby="ftab-team" hidden>
+              <div class="ftab-panel__copy">
+                <h3 class="ftab-panel__title">Everyone sees the same live numbers</h3>
+                <p class="ftab-panel__desc">Invite team members to register sales during high-volume streams. Whoever logs it, everyone watches the total update together.</p>
+              </div>
+              <div class="ftab-panel__mocks">
+                <div class="fmock">
+                  <div class="fmock__label">Logged by</div>
+                  <div class="sale-row sale-row--mock">
+                    <div class="sale-row__left"><span class="sale-row__dot"></span><span class="sale-row__name">Jordan M. · Vintage Coach Bag</span></div>
+                    <span class="sale-row__profit">+$83</span>
+                  </div>
+                </div>
+                <div class="fmock">
+                  <div class="fmock__label">Logged by</div>
+                  <div class="sale-row sale-row--mock">
+                    <div class="sale-row__left"><span class="sale-row__dot"></span><span class="sale-row__name">Riley K. · Y2K Jeans ×2</span></div>
+                    <span class="sale-row__profit">+$56</span>
+                  </div>
+                </div>
+                <div class="fmock">
+                  <div class="fmock__label">Team on session</div>
+                  <div class="phone-kpi phone-kpi--mock"><div class="phone-kpi__label">Active loggers</div><div class="phone-kpi__value">3</div></div>
+                </div>
+              </div>
             </div>
-            <h3 class="feature-card__title">Team collaboration</h3>
-            <p class="feature-card__desc">Invite team members to register sales. Everyone sees the same live numbers. Perfect for high-volume streams.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-card__icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+
+            <!-- ANALYTICS -->
+            <div class="ftab-panel" id="ftab-panel-analytics" role="tabpanel" aria-labelledby="ftab-analytics" hidden>
+              <div class="ftab-panel__copy">
+                <h3 class="ftab-panel__title">Your full history, always on hand</h3>
+                <p class="ftab-panel__desc">Every session saves a complete breakdown — revenue, cost, margin, duration, item-level detail — plus a one-tap CSV export for your accountant.</p>
+              </div>
+              <div class="ftab-panel__mocks">
+                <div class="fmock">
+                  <div class="fmock__label">Jun 14 session</div>
+                  <div class="phone-kpi phone-kpi--mock"><div class="phone-kpi__label">Margin</div><div class="phone-kpi__value phone-kpi__value--accent">42.2%</div></div>
+                </div>
+                <div class="fmock">
+                  <div class="fmock__label">Avg / sale</div>
+                  <div class="phone-kpi phone-kpi--mock"><div class="phone-kpi__label">Avg/sale</div><div class="phone-kpi__value">$179</div></div>
+                </div>
+                <div class="fmock">
+                  <div class="fmock__label">Export</div>
+                  <button class="btn btn--outline btn--sm fmock__export" type="button" tabindex="-1" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    Export CSV
+                  </button>
+                </div>
+              </div>
             </div>
-            <h3 class="feature-card__title">Session analytics</h3>
-            <p class="feature-card__desc">Every session saves a full breakdown: revenue, cost, margin, duration, and item-level detail. Your history, always on hand.</p>
-          </div>
-          <div class="feature-card">
-            <div class="feature-card__icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-            </div>
-            <h3 class="feature-card__title">One-tap export</h3>
-            <p class="feature-card__desc">Download a full CSV of any session or time range. Hand it to your accountant or import it into your own tools.</p>
           </div>
         </div>
       </div>
@@ -327,7 +412,7 @@
               <div class="preview-chart__title">Profit over time — 30 days</div>
               <svg class="chart-svg" viewBox="0 0 600 140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" role="img" aria-label="Profit trend chart showing upward growth over 30 days">
                 <defs>
-                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%"   stop-color="#22C55E" stop-opacity="0.28"/>
                     <stop offset="100%" stop-color="#22C55E" stop-opacity="0"/>
                   </linearGradient>
@@ -571,8 +656,6 @@
           <p class="section-eyebrow reveal">FAQ</p>
           <h2 class="section-h2 reveal reveal--d1" id="faq-heading">Questions answered</h2>
         </div>
-        <!-- FIX #4: removed invalid role="list"/"listitem" from accordion — FAQ items are not a list,
-             they are an accordion widget; the natural div semantics are correct here -->
         <div class="faq-list reveal reveal--d2">
           <div class="faq-item">
             <button class="faq-trigger" aria-expanded="false" aria-controls="faq-body-1">
@@ -593,7 +676,7 @@
               <span>What does "real-time profit" actually mean?</span>
               <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
-            <div class="faq-body" id="faq-body-3" role="region" aria-labelledby="faq-trigger-3"><div class="faq-body__inner"><p>The moment you register a sale during a live session, your profit, revenue, cost, and margin all update instantly — no refresh needed. This uses Supabase Realtime under the hood, so if you have a team member helping log sales, both of you see the numbers update live.</p></div></div>
+            <div class="faq-body" id="faq-body-3" role="region" aria-labelledby="faq-trigger-3"><div class="faq-body__inner"><p>The moment you register a sale during a live session, your profit, revenue, cost, and margin all update instantly — no refresh needed. If you have a team member helping log sales, you'll both see the numbers update live on your own screens.</p></div></div>
           </div>
           <div class="faq-item">
             <button class="faq-trigger" aria-expanded="false" aria-controls="faq-body-4">
@@ -614,7 +697,7 @@
               <span>Is my data secure?</span>
               <svg class="faq-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
-            <div class="faq-body" id="faq-body-6" role="region" aria-labelledby="faq-trigger-6"><div class="faq-body__inner"><p>WhatDash uses Supabase with Row Level Security (RLS), meaning every user can only access their own data or teams they belong to. There is zero cross-tenant access. Stripe handles all billing — we never store card details.</p></div></div>
+            <div class="faq-body" id="faq-body-6" role="region" aria-labelledby="faq-trigger-6"><div class="faq-body__inner"><p>Yes. Every account's data is isolated — you only ever see your own sales, products, and sessions, or those of a team you belong to. There's zero cross-account access. Billing is handled by a PCI-compliant payment processor — we never see or store your card details.</p></div></div>
           </div>
         </div>
       </div>
@@ -624,7 +707,6 @@
     <section class="cta-section" aria-labelledby="cta-heading">
       <div class="container">
         <div class="cta-inner">
-          <!-- FIX #5: removed inline style override; .cta-eyebrow class handles centering via CSS -->
           <p class="section-eyebrow cta-eyebrow reveal">Start today</p>
           <h2 class="cta-h2 reveal reveal--d1" id="cta-heading">
             Stop guessing.<br>
@@ -1021,7 +1103,6 @@
   </div>
 </div><!-- /dashboardPage -->
 
-<!-- FIX #2: was "main.js", corrected to "script.js" -->
 <script src="script.js"></script>
 </body>
 </html>
