@@ -335,7 +335,17 @@ function initFaq() {
 const SUPABASE_URL      = 'https://lorcuffjlkdtbwrzriig.supabase.com';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcmN1ZmZqbGtkdGJ3cnpyaWlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MjUyMTYsImV4cCI6MjA5NzIwMTIxNn0.Zza3NYKozLWH5GlgnuAyb4NOMHId9laHugbonG6echg';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Defensive: if the Supabase CDN script failed to load (network issue,
+// ad blocker, wrong URL, etc.), `window.supabase` won't exist. Guard
+// against that so the rest of the page (everything unrelated to auth)
+// still works instead of the whole script crashing on load.
+let supabase = null;
+try {
+  if (!window.supabase) throw new Error('Supabase library did not load from CDN');
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (err) {
+  console.error('WhatDash: Supabase client could not be initialized —', err);
+}
 
 const AuthService = (() => {
   /** Maps Supabase auth error messages to the friendly copy this UI
@@ -357,6 +367,7 @@ const AuthService = (() => {
 
   const SupabaseAdapter = {
     async signup({ name, email, password }) {
+      if (!supabase) throw new AuthError('Login is temporarily unavailable. Please try again shortly.');
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -373,12 +384,14 @@ const AuthService = (() => {
     },
 
     async login({ email, password }) {
+      if (!supabase) throw new AuthError('Login is temporarily unavailable. Please try again shortly.');
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw new AuthError(mapError(error));
       return { name: data.user.user_metadata?.name || '', email: data.user.email };
     },
 
     async getSession() {
+      if (!supabase) return null;
       const { data } = await supabase.auth.getSession();
       if (!data.session) return null;
       const user = data.session.user;
@@ -386,6 +399,7 @@ const AuthService = (() => {
     },
 
     async logout() {
+      if (!supabase) return;
       await supabase.auth.signOut();
     }
   };

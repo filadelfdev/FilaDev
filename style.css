@@ -19,10 +19,6 @@ html {
   text-size-adjust: 100%;
 }
 
-/* Prevent jarring layout shift when scrollbar appears/disappears */
-html { scrollbar-gutter: stable; }
-
-
 body {
   background: var(--bg);
   color: var(--text);
@@ -983,8 +979,8 @@ section { padding: 100px 0; }
   background: linear-gradient(120deg, transparent 0%, var(--accent) 50%, transparent 100%);
   background-size: 220% 100%;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
-  /* Default mask-composite for browsers that support it (compatibility) */
   mask-composite: exclude;
   opacity: .55;
   animation: fmock-sweep 2.6s var(--ease-out) 1;
@@ -2318,7 +2314,7 @@ section { padding: 100px 0; }
   .testimonials-grid { grid-template-columns: 1fr; }
   .footer__grid  { grid-template-columns: 1fr; }
   .footer__bottom { flex-direction: column; gap: 8px; text-align: center; }
- 
+
   .dash-kpi-row { grid-template-columns: 1fr 1fr; }
   .dash-nav__links { display: none; }
   .dash-main__header { flex-direction: column; align-items: flex-start; }
