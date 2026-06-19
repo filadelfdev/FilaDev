@@ -1,0 +1,26 @@
+# Secrets / environment files — never commit these
+.env
+.env.*
+.env.local
+.env.*.local
+_env.local
+*.env
+
+# Dependencies (in case npm/node tooling gets added later)
+node_modules/
+
+# Hosting platform local caches
+.vercel/
+.netlify/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*

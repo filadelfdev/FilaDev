@@ -319,80 +319,79 @@ function initFaq() {
    AUTH SERVICE
    ------------------------------------------------------------------
    Adapter layer so the UI never talks to storage directly.
-   Today `LocalAdapter` simulates an account store in localStorage —
-   this is a PROTOTYPE ONLY, not a real authentication backend.
-   When the real API ships, swap `activeAdapter` for an adapter that
-   calls it; `AuthService`'s public interface (async login/signup/
-   getSession/logout) does not need to change.
-   ================================================================ */
-const AuthService = (() => {
-  const STORAGE_KEY_USERS   = 'wd_users_v3';
-  const STORAGE_KEY_SESSION = 'wd_session_v3';
+   `SupabaseAdapter` backs onto real Supabase Auth (email/password).
+   `AuthService`'s public interface (async login/signup/getSession/
+   logout) stays the same regardless of which adapter is active.
 
-  /** Non-reversible local digest so we never keep the raw password
-   *  around, even in this prototype. NOT a substitute for a real
-   *  server-side password hash (e.g. bcrypt/argon2) — replace this
-   *  whole adapter once a real backend exists. */
-  async function digest(text) {
-    const enc = new TextEncoder().encode(text);
-    const buf = await crypto.subtle.digest('SHA-256', enc);
-    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+   NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY are safe
+   to ship in client-side code — they're meant to be public, and
+   access to data is enforced by Row Level Security in Supabase, not
+   by keeping these secret. Never put SUPABASE_SERVICE_ROLE_KEY,
+   OPENAI_API_KEY, or STRIPE_SECRET_KEY here or anywhere in this
+   file — those belong only in server-side environment variables
+   (e.g. a Vercel/Netlify serverless function), never in code that
+   ships to the browser.
+   ================================================================ */
+const SUPABASE_URL      = 'https://lorcuffjlkdtbwrzriig.supabase.com';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcmN1ZmZqbGtkdGJ3cnpyaWlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MjUyMTYsImV4cCI6MjA5NzIwMTIxNn0.Zza3NYKozLWH5GlgnuAyb4NOMHId9laHugbonG6echg';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const AuthService = (() => {
+  /** Maps Supabase auth error messages to the friendly copy this UI
+   *  already uses elsewhere, falling back to the raw message for
+   *  anything we haven't seen before. */
+  function mapError(error) {
+    const msg = error?.message || '';
+    if (/already registered/i.test(msg)) {
+      return 'An account with this email already exists. Try logging in.';
+    }
+    if (/invalid login credentials/i.test(msg)) {
+      return 'Incorrect email or password. Please try again.';
+    }
+    if (/email not confirmed/i.test(msg)) {
+      return 'Please confirm your email before logging in — check your inbox.';
+    }
+    return msg || 'Something went wrong. Please try again.';
   }
 
-  const LocalAdapter = {
+  const SupabaseAdapter = {
     async signup({ name, email, password }) {
-      const users = readUsers();
-      if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
-        throw new AuthError('An account with this email already exists. Try logging in.');
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { name } }
+      });
+      if (error) throw new AuthError(mapError(error));
+
+      // No session means the project requires email confirmation
+      // before the account can log in — not a failure.
+      if (!data.session) {
+        return { name, email, pending: true };
       }
-      const passwordHash = await digest(password);
-      users.push({ name, email, passwordHash });
-      writeUsers(users);
-      const session = { name, email };
-      writeSession(session);
-      return session;
+      return { name, email: data.user.email };
     },
 
     async login({ email, password }) {
-      const users = readUsers();
-      const passwordHash = await digest(password);
-      const user = users.find(u =>
-        u.email.toLowerCase() === email.toLowerCase() && u.passwordHash === passwordHash
-      );
-      if (!user) throw new AuthError('Incorrect email or password. Please try again.');
-      const session = { name: user.name, email: user.email };
-      writeSession(session);
-      return session;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw new AuthError(mapError(error));
+      return { name: data.user.user_metadata?.name || '', email: data.user.email };
     },
 
     async getSession() {
-      return readSession();
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) return null;
+      const user = data.session.user;
+      return { name: user.user_metadata?.name || '', email: user.email };
     },
 
     async logout() {
-      try { localStorage.removeItem(STORAGE_KEY_SESSION); } catch (_) {}
+      await supabase.auth.signOut();
     }
   };
 
-  function readUsers() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]'); }
-    catch (_) { return []; }
-  }
-  function writeUsers(users) {
-    try { localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users)); }
-    catch (err) { console.warn('WhatDash: could not persist users', err); }
-  }
-  function writeSession(session) {
-    try { localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(session)); }
-    catch (err) { console.warn('WhatDash: could not persist session', err); }
-  }
-  function readSession() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY_SESSION)); }
-    catch (_) { return null; }
-  }
-
-  // Swap this single binding when a real backend adapter is ready.
-  const activeAdapter = LocalAdapter;
+  // Swap this single binding if a different backend adapter is ever needed.
+  const activeAdapter = SupabaseAdapter;
 
   return {
     signup:     (data) => activeAdapter.signup(data),
@@ -466,8 +465,16 @@ const Auth = (() => {
     setTimeout(() => el.classList.remove('auth-error--visible'), 5000);
   }
 
+  function showNotice(id, msg) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('auth-notice--visible');
+  }
+
   function clearErrors() {
     $$('.auth-error').forEach(el => el.classList.remove('auth-error--visible'));
+    $$('.auth-notice').forEach(el => el.classList.remove('auth-notice--visible'));
   }
 
   function setSubmitting(button, isSubmitting) {
@@ -489,6 +496,10 @@ const Auth = (() => {
     setSubmitting(submitBtn, true);
     try {
       const session = await AuthService.signup({ name, email, password });
+      if (session.pending) {
+        showNotice('signupNotice', 'Account created! Check your email to confirm it, then log in.');
+        return;
+      }
       close();
       Dashboard.mount(session);
     } catch (err) {
