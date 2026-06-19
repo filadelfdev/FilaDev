@@ -979,7 +979,6 @@ section { padding: 100px 0; }
   background: linear-gradient(120deg, transparent 0%, var(--accent) 50%, transparent 100%);
   background-size: 220% 100%;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: .55;
@@ -1856,19 +1855,6 @@ section { padding: 100px 0; }
   display: none;
 }
 .auth-error--visible { display: block; }
-
-/* Notice message (e.g. "check your email") — same shape as .auth-error,
-   neutral/positive color so it doesn't read as a failure */
-.auth-notice {
-  font-size: 12px;
-  color: var(--color-profit);
-  background: rgba(34,197,94,.08);
-  border: 1px solid rgba(34,197,94,.20);
-  border-radius: var(--radius-md);
-  padding: 10px 14px;
-  display: none;
-}
-.auth-notice--visible { display: block; }
 
 /* ----------------------------------------------------------------
    20. DASHBOARD PAGE
