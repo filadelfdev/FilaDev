@@ -332,7 +332,7 @@ function initFaq() {
    (e.g. a Vercel/Netlify serverless function), never in code that
    ships to the browser.
    ================================================================ */
-const SUPABASE_URL      = 'https://lorcuffjlkdtbwrzriig.supabase.com';
+const SUPABASE_URL      = 'https://lorcuffjlkdtbwrzriig.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcmN1ZmZqbGtkdGJ3cnpyaWlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MjUyMTYsImV4cCI6MjA5NzIwMTIxNn0.Zza3NYKozLWH5GlgnuAyb4NOMHId9laHugbonG6echg';
 
 // Defensive: if the Supabase CDN script failed to load (network issue,

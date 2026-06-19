@@ -980,6 +980,7 @@ section { padding: 100px 0; }
   background-size: 220% 100%;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
   opacity: .55;
   animation: fmock-sweep 2.6s var(--ease-out) 1;
