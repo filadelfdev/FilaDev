@@ -335,17 +335,32 @@ function initFaq() {
 const SUPABASE_URL      = 'https://lorcuffjlkdtbwrzriig.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcmN1ZmZqbGtkdGJ3cnpyaWlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MjUyMTYsImV4cCI6MjA5NzIwMTIxNn0.Zza3NYKozLWH5GlgnuAyb4NOMHId9laHugbonG6echg';
 
-// Defensive: if the Supabase CDN script failed to load (network issue,
-// ad blocker, wrong URL, etc.), `window.supabase` won't exist. Guard
-// against that so the rest of the page (everything unrelated to auth)
-// still works instead of the whole script crashing on load.
-let supabase = null;
-try {
-  if (!window.supabase) throw new Error('Supabase library did not load from CDN');
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} catch (err) {
-  console.error('WhatHub: Supabase client could not be initialized —', err);
-}
+// Loaded via dynamic import() (not a static top-of-file import, and not
+// a CDN <script> + window.supabase global). This is the most robust
+// option of the three:
+//   - A CDN <script src="...UMD-file...">  → breaks whenever that exact
+//     filename changes between package versions (this has 404'd twice
+//     already on this project).
+//   - A static `import {...} from '...'` at the top of the file → if
+//     that URL fails for ANY reason (network hiccup, ad blocker, CORS),
+//     the WHOLE module fails to evaluate and NOTHING on the page runs —
+//     not just login, but theme toggle, FAQ, nav, everything.
+//   - A dynamic `await import('...')`, called lazily and wrapped in
+//     try/catch → if it fails, only this promise rejects. Everything
+//     else on the page (already initialized by the time this resolves)
+//     keeps working, exactly like the original defensive design here
+//     intended.
+// supabaseReady resolves to the initialized client, or null if it
+// could not be loaded — every AuthService method awaits this first.
+const supabaseReady = (async () => {
+  try {
+    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+    return createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } catch (err) {
+    console.error('WhatHub: Supabase client could not be initialized —', err);
+    return null;
+  }
+})();
 
 const AuthService = (() => {
   /** Maps Supabase auth error messages to the friendly copy this UI
@@ -367,6 +382,7 @@ const AuthService = (() => {
 
   const SupabaseAdapter = {
     async signup({ name, email, password }) {
+      const supabase = await supabaseReady;
       if (!supabase) throw new AuthError('Login is temporarily unavailable. Please try again shortly.');
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -384,6 +400,7 @@ const AuthService = (() => {
     },
 
     async login({ email, password }) {
+      const supabase = await supabaseReady;
       if (!supabase) throw new AuthError('Login is temporarily unavailable. Please try again shortly.');
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw new AuthError(mapError(error));
@@ -391,6 +408,7 @@ const AuthService = (() => {
     },
 
     async getSession() {
+      const supabase = await supabaseReady;
       if (!supabase) return null;
       const { data } = await supabase.auth.getSession();
       if (!data.session) return null;
@@ -399,6 +417,7 @@ const AuthService = (() => {
     },
 
     async logout() {
+      const supabase = await supabaseReady;
       if (!supabase) return;
       await supabase.auth.signOut();
     }
