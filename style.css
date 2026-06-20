@@ -1,5 +1,5 @@
 /* ================================================================
-   WHATDASH — Design System v2
+   WHATHUB — Design System v2
    Architecture: CSS custom properties → component styles → utilities
    Reference quality: Stripe, Linear, Vercel
    ================================================================ */
@@ -277,21 +277,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -.03em;
   flex-shrink: 0;
   margin-right: 20px;
 }
 
-.navbar__logo-mark {
-  width: 30px; height: 30px;
-  background: var(--accent);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+.navbar__logo-img {
+  height: 30px;
+  width: auto;
+  display: block;
 }
-.navbar__logo-mark svg { color: #000; }
 
 .navbar__nav {
   display: flex;
@@ -1638,18 +1632,12 @@ section { padding: 100px 0; }
 .footer__brand-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -.03em;
   margin-bottom: 14px;
 }
-.footer__logo-mark {
-  width: 28px; height: 28px;
-  background: var(--accent);
-  border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+.footer__logo-img {
+  height: 26px;
+  width: auto;
+  display: block;
 }
 
 .footer__tagline {
@@ -1735,14 +1723,12 @@ section { padding: 100px 0; }
 }
 
 .auth-logo {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 16px; font-weight: 700; letter-spacing: -.03em;
+  display: flex; align-items: center;
 }
-.auth-logo-mark {
-  width: 28px; height: 28px;
-  background: var(--accent);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
+.auth-logo-img {
+  height: 26px;
+  width: auto;
+  display: block;
 }
 
 .auth-close {
@@ -1888,17 +1874,15 @@ section { padding: 100px 0; }
 }
 
 .dash-nav__logo {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 15px; font-weight: 700; letter-spacing: -.03em;
+  display: flex; align-items: center;
   padding-right: 28px;
   border-right: 1px solid var(--border);
   flex-shrink: 0;
 }
-.dash-nav__logo-mark {
-  width: 26px; height: 26px;
-  background: var(--accent);
-  border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
+.dash-nav__logo-img {
+  height: 24px;
+  width: auto;
+  display: block;
 }
 
 .dash-nav__links {

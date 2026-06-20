@@ -1,5 +1,5 @@
 /**
- * WhatDash — main.js
+ * WhatHub — main.js
  * Architecture: IIFE modules, no global pollution, event delegation
  * where appropriate. No framework needed for this scope.
  */
@@ -218,7 +218,7 @@ function initLiveProfitCounter() {
    ================================================================ */
 const Terminal = (() => {
   const SCRIPT = [
-    { delay: 0,    cls: 't-line--sys',    text: 'WhatDash Live Tracker — Session started' },
+    { delay: 0,    cls: 't-line--sys',    text: 'WhatHub Live Tracker — Session started' },
     { delay: 350,  cls: 't-line--sys',    text: 'Platform: Whatnot  ·  12:04:33 PM' },
     { delay: 700,  cls: '',              text: '' },
     { delay: 1050, cls: 't-line--action', text: '► Sale registered: Vintage Coach Bag × 1' },
@@ -344,7 +344,7 @@ try {
   if (!window.supabase) throw new Error('Supabase library did not load from CDN');
   supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 } catch (err) {
-  console.error('WhatDash: Supabase client could not be initialized —', err);
+  console.error('WhatHub: Supabase client could not be initialized —', err);
 }
 
 const AuthService = (() => {
@@ -706,7 +706,7 @@ const FeatureTabs = (() => {
    ================================================================ */
 function initFooterYear() {
   const el = $('#footerYear');
-  if (el) el.textContent = `© ${new Date().getFullYear()} WhatDash. All rights reserved.`;
+  if (el) el.textContent = `© ${new Date().getFullYear()} WhatHub. All rights reserved.`;
 }
 
 /* ================================================================
