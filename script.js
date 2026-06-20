@@ -319,107 +319,173 @@ function initFaq() {
    AUTH SERVICE
    ------------------------------------------------------------------
    Adapter layer so the UI never talks to storage directly.
-   `SupabaseAdapter` backs onto real Supabase Auth (email/password).
-   `AuthService`'s public interface (async login/signup/getSession/
-   logout) stays the same regardless of which adapter is active.
+   `SupabaseAdapter` talks to Supabase Auth (the "GoTrue" service)
+   using plain fetch() against its REST API — no @supabase/supabase-js
+   SDK, no CDN, no import. `AuthService`'s public interface (async
+   login/signup/getSession/logout) stays the same regardless of which
+   adapter is active.
 
-   NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY are safe
-   to ship in client-side code — they're meant to be public, and
-   access to data is enforced by Row Level Security in Supabase, not
-   by keeping these secret. Never put SUPABASE_SERVICE_ROLE_KEY,
-   OPENAI_API_KEY, or STRIPE_SECRET_KEY here or anywhere in this
-   file — those belong only in server-side environment variables
-   (e.g. a Vercel/Netlify serverless function), never in code that
-   ships to the browser.
+   Why fetch() instead of the SDK: this project ships as static
+   files with no build step, so the SDK can only be loaded from a
+   third-party CDN at runtime. That dependency has broken repeatedly
+   here (CDN filenames changing between package versions, the import
+   getting blocked by network/ad-blocker/corporate firewalls). The
+   Auth REST API itself is stable, official, and documented by
+   Supabase — calling it directly with fetch() removes that whole
+   class of failure. Supabase's own client SDK is a thin wrapper
+   around these same endpoints.
+
+   SUPABASE_URL / SUPABASE_ANON_KEY are safe to ship in client-side
+   code — they're meant to be public, and access to data is enforced
+   by Row Level Security in Supabase, not by keeping these secret.
+   Never put SUPABASE_SERVICE_ROLE_KEY, OPENAI_API_KEY, or
+   STRIPE_SECRET_KEY here or anywhere in this file — those belong
+   only in server-side environment variables (e.g. a Vercel/Netlify
+   serverless function), never in code that ships to the browser.
    ================================================================ */
 const SUPABASE_URL      = 'https://lorcuffjlkdtbwrzriig.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcmN1ZmZqbGtkdGJ3cnpyaWlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MjUyMTYsImV4cCI6MjA5NzIwMTIxNn0.Zza3NYKozLWH5GlgnuAyb4NOMHId9laHugbonG6echg';
+const SUPABASE_AUTH_URL = `${SUPABASE_URL}/auth/v1`;
+const SESSION_STORAGE_KEY = 'wd_supabase_session';
 
-// Loaded via dynamic import() (not a static top-of-file import, and not
-// a CDN <script> + window.supabase global). This is the most robust
-// option of the three:
-//   - A CDN <script src="...UMD-file...">  → breaks whenever that exact
-//     filename changes between package versions (this has 404'd twice
-//     already on this project).
-//   - A static `import {...} from '...'` at the top of the file → if
-//     that URL fails for ANY reason (network hiccup, ad blocker, CORS),
-//     the WHOLE module fails to evaluate and NOTHING on the page runs —
-//     not just login, but theme toggle, FAQ, nav, everything.
-//   - A dynamic `await import('...')`, called lazily and wrapped in
-//     try/catch → if it fails, only this promise rejects. Everything
-//     else on the page (already initialized by the time this resolves)
-//     keeps working, exactly like the original defensive design here
-//     intended.
-// supabaseReady resolves to the initialized client, or null if it
-// could not be loaded — every AuthService method awaits this first.
-const supabaseReady = (async () => {
+/** Reads the persisted session ({ access_token, refresh_token, user })
+ *  from localStorage, or null if there isn't one / it's corrupted. */
+function readStoredSession() {
   try {
-    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
-    return createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  } catch (err) {
-    console.error('WhatHub: Supabase client could not be initialized —', err);
+    const raw = localStorage.getItem(SESSION_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) {
     return null;
   }
-})();
+}
 
-const AuthService = (() => {
-  /** Maps Supabase auth error messages to the friendly copy this UI
-   *  already uses elsewhere, falling back to the raw message for
-   *  anything we haven't seen before. */
-  function mapError(error) {
-    const msg = error?.message || '';
-    if (/already registered/i.test(msg)) {
-      return 'An account with this email already exists. Try logging in.';
-    }
-    if (/invalid login credentials/i.test(msg)) {
-      return 'Incorrect email or password. Please try again.';
-    }
-    if (/email not confirmed/i.test(msg)) {
-      return 'Please confirm your email before logging in — check your inbox.';
-    }
-    return msg || 'Something went wrong. Please try again.';
+function writeStoredSession(session) {
+  try {
+    if (session) localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+    else localStorage.removeItem(SESSION_STORAGE_KEY);
+  } catch (_) { /* localStorage unavailable — session just won't persist across reloads */ }
+}
+
+class AuthError extends Error {}
+
+/** Low-level call to a Supabase Auth REST endpoint.
+ *  Throws AuthError with a Supabase-style { message } on failure,
+ *  or a network-failure AuthError if fetch itself couldn't run. */
+async function callAuthEndpoint(path, { method = 'POST', body, accessToken } = {}) {
+  let res;
+  try {
+    res = await fetch(`${SUPABASE_AUTH_URL}${path}`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${accessToken || SUPABASE_ANON_KEY}`,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch (err) {
+    // fetch() itself rejected — e.g. offline, DNS failure, CORS preflight blocked.
+    console.error('WhatHub: network error reaching Supabase Auth —', err);
+    throw new AuthError('Login is temporarily unavailable. Please try again shortly.');
   }
 
+  let data = null;
+  try { data = await res.json(); } catch (_) { /* empty body, e.g. on 204 */ }
+
+  if (!res.ok) {
+    const message = data?.error_description || data?.msg || data?.message || `Request failed (${res.status})`;
+    throw new AuthError(mapErrorMessage(message));
+  }
+  return data;
+}
+
+/** Maps Supabase auth error messages to the friendly copy this UI
+ *  already uses elsewhere, falling back to the raw message for
+ *  anything we haven't seen before. */
+function mapErrorMessage(msg) {
+  if (/already registered|user already exists/i.test(msg)) {
+    return 'An account with this email already exists. Try logging in.';
+  }
+  if (/invalid login credentials/i.test(msg)) {
+    return 'Incorrect email or password. Please try again.';
+  }
+  if (/email not confirmed/i.test(msg)) {
+    return 'Please confirm your email before logging in — check your inbox.';
+  }
+  return msg || 'Something went wrong. Please try again.';
+}
+
+const AuthService = (() => {
   const SupabaseAdapter = {
     async signup({ name, email, password }) {
-      const supabase = await supabaseReady;
-      if (!supabase) throw new AuthError('Login is temporarily unavailable. Please try again shortly.');
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { name } }
+      const data = await callAuthEndpoint('/signup', {
+        body: { email, password, data: { name } },
       });
-      if (error) throw new AuthError(mapError(error));
 
-      // No session means the project requires email confirmation
-      // before the account can log in — not a failure.
-      if (!data.session) {
+      // No access_token in the response means the project requires
+      // email confirmation before the account can log in — not a failure.
+      if (!data.access_token) {
         return { name, email, pending: true };
       }
+
+      writeStoredSession({
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        user: data.user,
+      });
       return { name, email: data.user.email };
     },
 
     async login({ email, password }) {
-      const supabase = await supabaseReady;
-      if (!supabase) throw new AuthError('Login is temporarily unavailable. Please try again shortly.');
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw new AuthError(mapError(error));
+      const data = await callAuthEndpoint('/token?grant_type=password', {
+        body: { email, password },
+      });
+      writeStoredSession({
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        user: data.user,
+      });
       return { name: data.user.user_metadata?.name || '', email: data.user.email };
     },
 
     async getSession() {
-      const supabase = await supabaseReady;
-      if (!supabase) return null;
-      const { data } = await supabase.auth.getSession();
-      if (!data.session) return null;
-      const user = data.session.user;
-      return { name: user.user_metadata?.name || '', email: user.email };
+      const stored = readStoredSession();
+      if (!stored?.access_token) return null;
+
+      // Validate/refresh: ask Supabase who this access_token belongs to.
+      try {
+        const user = await callAuthEndpoint('/user', {
+          method: 'GET',
+          accessToken: stored.access_token,
+        });
+        return { name: user.user_metadata?.name || '', email: user.email };
+      } catch (_) {
+        // access_token expired — try the refresh_token before giving up.
+        if (!stored.refresh_token) { writeStoredSession(null); return null; }
+        try {
+          const refreshed = await callAuthEndpoint('/token?grant_type=refresh_token', {
+            body: { refresh_token: stored.refresh_token },
+          });
+          writeStoredSession({
+            access_token: refreshed.access_token,
+            refresh_token: refreshed.refresh_token,
+            user: refreshed.user,
+          });
+          return { name: refreshed.user.user_metadata?.name || '', email: refreshed.user.email };
+        } catch (_) {
+          writeStoredSession(null);
+          return null;
+        }
+      }
     },
 
     async logout() {
-      const supabase = await supabaseReady;
-      if (!supabase) return;
-      await supabase.auth.signOut();
+      const stored = readStoredSession();
+      writeStoredSession(null);
+      if (!stored?.access_token) return;
+      try {
+        await callAuthEndpoint('/logout', { accessToken: stored.access_token });
+      } catch (_) { /* best-effort — local session is already cleared above */ }
     }
   };
 
@@ -433,8 +499,6 @@ const AuthService = (() => {
     logout:     ()     => activeAdapter.logout(),
   };
 })();
-
-class AuthError extends Error {}
 
 /* ================================================================
    AUTH MODAL
